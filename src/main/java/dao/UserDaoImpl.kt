@@ -8,6 +8,7 @@ class UserDaoImpl: UserDao, BaseDao() {
 
     override fun queryUser(user: User): User? {
         openSession()
+        println("hahaha")
         return session?.selectOne("dao.UserDaoImpl.queryUser", user) as User?
     }
 
