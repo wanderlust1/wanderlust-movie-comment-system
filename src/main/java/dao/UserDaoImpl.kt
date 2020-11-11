@@ -8,12 +8,12 @@ class UserDaoImpl: UserDao, BaseDao() {
 
     override fun queryUser(user: User): User? {
         openSession()
-        println("hahaha")
         return session?.selectOne("dao.UserDaoImpl.queryUser", user) as User?
     }
 
     override fun insertUser(user: User): Int {
         openSession()
+        println("hahaha")
         val result = session?.insert("dao.UserDaoImpl.insertUser", user)
         session?.commit()
         return result ?: -1
