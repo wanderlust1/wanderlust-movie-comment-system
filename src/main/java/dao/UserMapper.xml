@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.UserDaoImpl">
+
+	<select id="queryUser" resultType="entity.User" parameterType="entity.User">
+		select user_id as userId, nick_name as nickName, password
+		from user1
+		where user_id = #{userId} and password = #{password}
+	</select>
+
+	<insert id="insertUser" parameterType="entity.User">
+		insert into user1(user_id, nick_name, password)
+		values(#{userId}, #{nickName}, #{password})
+	</insert>
+
+</mapper>
+

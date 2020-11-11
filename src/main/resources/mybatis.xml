@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<environments default="sqlserver">
+		<environment id="sqlserver">
+			<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<property name="driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+				<property name="url" value="jdbc:sqlserver://127.0.0.1:1433;databaseName=LOL" />
+				<property name="username" value="sa" />
+				<property name="password" value="123" />
+			</dataSource>
+		</environment>
+	</environments>
+
+	<mappers>
+		<mapper resource="dao/HeroMapper.xml" />
+		<mapper resource="dao/UserMapper.xml" />
+	</mappers>
+
+</configuration>
