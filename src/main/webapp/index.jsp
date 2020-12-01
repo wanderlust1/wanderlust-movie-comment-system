@@ -38,22 +38,22 @@
             var table = layui.table;
             table.render({
                 elem: '#table-demo'
-                , width: 926
-                , url: '<%=request.getContextPath()%>/getAllHero'
+                , url: '<%=request.getContextPath()%>/getAllMovies'
                 , cols: [[
-                    {field: 'name', width: 127, align: 'center', title: '名称'},
-                    {field: 'title', width: 126, align: 'center', title: '英雄名'},
-                    {field: 'alias', width: 126, align: 'center', title: '英文名'},
-                    {field: 'tags', width: 270, align: 'center', title: '角色'},
-                    {field: 'lines', width: 270, align: 'center', title: '位置'}
+                    {field: 'id', width: 300, align: 'center', title: 'ID'},
+                    {field: 'title', width: 500, align: 'center', title: '电影名称'},
+                    {field: 'rate', width: 126, align: 'center', title: '评分'}
                 ]]
+            });
+            table.on('row(table)', function(obj){
+                window.open("movie_detail.jsp?id=" + obj.data.id);
             });
             //按钮事件
             layui.$('.layui-btn').on('click', function () {
                 var search = layui.$('#input').val()
-                var url1 = '<%=request.getContextPath()%>/getAllHero'
+                var url1 = '<%=request.getContextPath()%>/getAllMovies'
                 if (search != '') {
-                     url1 = '<%=request.getContextPath()%>/getHero?search=' + search
+                     url1 = '<%=request.getContextPath()%>/getMoviesBySearch?search=' + search
                 }
                 table.reload('table-demo', { url: url1 });
             });
@@ -66,7 +66,7 @@
         <div id="search_box">
             <div class="layui-inline">
                 <div class="layui-input-inline edit_input_div">
-                    <input type="text" name="Book_num" autocomplete="off" placeholder="请输入英雄名称、英文名等关键字..."
+                    <input type="text" name="Book_num" autocomplete="off" placeholder="请输入电影名称、ID等关键字..."
                            class="layui-input" id="input">
                 </div>
             </div>

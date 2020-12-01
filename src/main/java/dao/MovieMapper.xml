@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.MovieDaoImpl">
+
+	<!-- 查询所有电影详细数据 -->
+	<select id="queryAllMovieDetail" resultType="entity.MovieDetail">
+		select *
+		from movie_detail
+	</select>
+
+	<!-- 根据关键词查询所有相关电影的详细数据 -->
+	<select id="queryMovieDetailBySearch" resultType="entity.MovieDetail" parameterType="String">
+		select *
+		from movie_detail
+		where movieName like '%' + #{0} + '%' or movieAlias like '%' + #{0} + '%' or movieId like '%' + #{0} + '%'
+	</select>
+
+	<!-- 查询所有电影详细数据 -->
+	<select id="queryAllMovies" resultType="entity.Movie">
+		select movie_id as id, title, rate
+		from movie
+	</select>
+
+	<!-- 根据关键词查询所有相关电影的详细数据 -->
+	<select id="queryMoviesBySearch" resultType="entity.Movie" parameterType="String">
+		select movie_id as id, title, rate
+		from movie
+		where title like '%' + #{0} + '%'
+	</select>
+
+	<insert id="insertMovie" parameterType="entity.MovieDetail">
+		insert into movie_detail (
+			movieId, movieName, director, scriptwriter, actors, movieType,
+			movieArea, movieLang, movieDate, movieSize, movieAlias, movieIMDb, movieDesc, rate, rateCount, ratePer
+		)
+		values (
+			#{movieId}, #{movieName}, #{director}, #{scriptwriter}, #{actors}, #{movieType},
+			#{movieArea}, #{movieLang}, #{movieDate}, #{movieSize}, #{movieAlias}, #{movieIMDb}, #{movieDesc}, #{rate}, #{rateCount}, #{ratePer}
+		)
+	</insert>
+
+</mapper>
+

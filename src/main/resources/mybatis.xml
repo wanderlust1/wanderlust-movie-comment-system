@@ -9,7 +9,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 			<transactionManager type="JDBC"/>
 			<dataSource type="POOLED">
 				<property name="driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
-				<property name="url" value="jdbc:sqlserver://127.0.0.1:1433;databaseName=LOL" />
+				<property name="url" value="jdbc:sqlserver://127.0.0.1:1433;databaseName=MovieSystem" />
 				<property name="username" value="sa" />
 				<property name="password" value="123" />
 			</dataSource>
@@ -17,8 +17,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	</environments>
 
 	<mappers>
-		<mapper resource="dao/HeroMapper.xml" />
+		<mapper resource="dao/MovieMapper.xml" />
 		<mapper resource="dao/UserMapper.xml" />
+		<mapper resource="dao/CommentMapper.xml" />
 	</mappers>
 
 </configuration>

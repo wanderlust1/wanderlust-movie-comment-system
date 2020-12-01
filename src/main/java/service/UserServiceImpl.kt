@@ -1,9 +1,8 @@
 package service
 
 import dao.UserDao
-import entity.Login
-import entity.Register
 import entity.User
+import event.UserEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -15,17 +14,17 @@ class UserServiceImpl: UserService {
 
     override fun login(user: User): Int {
         return if (mUserDao.queryUser(user)?.userId == user.userId) {
-            Login.SUCC
+            UserEvent.SUCC
         } else {
-            Login.FAIL
+            UserEvent.FAIL
         }
     }
 
     override fun register(user: User): Int {
         return if (mUserDao.insertUser(user) == 1) {
-            Register.SUCC
+            UserEvent.SUCC
         } else {
-            Register.FAIL
+            UserEvent.FAIL
         }
     }
 

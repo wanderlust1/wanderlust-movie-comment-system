@@ -1,9 +1,8 @@
 package controller
 
 import com.google.gson.Gson
-import entity.Login
-import entity.Register
 import entity.User
+import event.UserEvent
 import org.apache.ibatis.exceptions.IbatisException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -26,11 +25,11 @@ class LoginController {
         rsp.contentType = "text/html;charset=UTF-8"
         val result = mUserService.login(Gson().fromJson(req.getParameter("login_req"), User::class.java))
         val code = when (result) {
-            Login.SUCC -> "登录成功"
-            Login.FAIL -> "登录失败，账号或密码错误"
+            UserEvent.SUCC -> "登录成功"
+            UserEvent.FAIL -> "登录失败，账号或密码错误"
             else -> ""
         }
-        rsp.writer.write(Gson().toJson(Login.Rsp(result, code)))
+        rsp.writer.write(Gson().toJson(UserEvent.LoginRsp(result, code)))
     }
 
     @RequestMapping("/register")
@@ -38,15 +37,15 @@ class LoginController {
         rsp.contentType = "text/html;charset=UTF-8"
         val request = Gson().fromJson(req.getParameter("register_req"), User::class.java)
         val result = try {
-            if (mUserService.register(request) == Register.SUCC) {
-                Register.Rsp(Register.SUCC, "注册成功")
+            if (mUserService.register(request) == UserEvent.SUCC) {
+                UserEvent.RegisterRsp(UserEvent.SUCC, "注册成功")
             } else {
-                Register.Rsp(Register.FAIL, "注册失败，未知错误")
+                UserEvent.RegisterRsp(UserEvent.FAIL, "注册失败，未知错误")
             }
         } catch (e: IbatisException) {
-            Register.Rsp(Register.EXISTED, "注册失败，该账号已存在")
+            UserEvent.RegisterRsp(UserEvent.EXISTED, "注册失败，该账号已存在")
         } catch (e: Exception) {
-            Register.Rsp(Register.FAIL, "注册失败，未知错误")
+            UserEvent.RegisterRsp(UserEvent.FAIL, "注册失败，未知错误")
         }
         rsp.writer.write(Gson().toJson(result))
     }

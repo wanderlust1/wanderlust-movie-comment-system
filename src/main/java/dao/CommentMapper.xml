@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.CommentDaoImpl">
+
+	<select id="queryCommentByMovieId" resultType="entity.Comment" parameterType="String">
+		select movie_id as id, vote as count, name as username, time, comment as content, score as rate, user_id as userId
+		from comment
+		where movie_id = #{0}
+	</select>
+
+</mapper>
+

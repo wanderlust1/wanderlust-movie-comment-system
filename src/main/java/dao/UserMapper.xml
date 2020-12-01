@@ -7,12 +7,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="queryUser" resultType="entity.User" parameterType="entity.User">
 		select user_id as userId, nick_name as nickName, password
-		from user1
+		from users
 		where user_id = #{userId} and password = #{password}
 	</select>
 
 	<insert id="insertUser" parameterType="entity.User">
-		insert into user1(user_id, nick_name, password)
+		insert into users(user_id, nick_name, password)
 		values(#{userId}, #{nickName}, #{password})
 	</insert>
 
