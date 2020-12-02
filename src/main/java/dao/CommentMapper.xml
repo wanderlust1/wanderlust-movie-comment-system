@@ -6,10 +6,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="dao.CommentDaoImpl">
 
 	<select id="queryCommentByMovieId" resultType="entity.Comment" parameterType="String">
-		select movie_id as id, vote as count, name as username, time, comment as content, score as rate, user_id as userId
+		select movie_id as movieId, vote as count, name as username, time, comment as content, score as rate, user_id as userId, comment_id as id
 		from comment
 		where movie_id = #{0}
 	</select>
+
+	<insert id="insertComment" parameterType="entity.Comment">
+		insert into comment(movie_id, vote, name, time, comment, score, user_id, comment_id)
+		values(#{movieId}, #{count}, #{username}, #{time}, #{content}, #{rate}, #{userId}, #{id})
+	</insert>
 
 </mapper>
 

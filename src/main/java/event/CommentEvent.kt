@@ -5,6 +5,11 @@ import entity.Comment
 
 interface CommentEvent {
 
+    companion object {
+        const val SUCC = 0
+        const val FAIL = 1
+    }
+
     class CommentListRsp(val entityList: List<Comment>) {
         var code: Int = 0
         var count: Int = 0
@@ -17,5 +22,7 @@ interface CommentEvent {
             count = entityList.size
         }
     }
+
+    data class AddCommentRsp(val code: Int = 1)
 
 }

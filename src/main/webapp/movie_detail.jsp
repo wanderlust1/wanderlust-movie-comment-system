@@ -196,7 +196,7 @@
                     <div class="layui-form-item layui-form-text">
                         <label class="layui-form-label">电影评价</label>
                         <div class="layui-input-inline">
-                                <textarea placeholder="输入简短的文本评价一下这部电影吧" class="layui-textarea" name="comment_desc"
+                                <textarea placeholder="输入简短的文本评价一下这部电影吧" class="layui-textarea" name="content"
                                           style="width:850px;height: 120px"></textarea>
                         </div>
                     </div>
@@ -259,27 +259,8 @@
         }
     });
 
-    //获取评论
-    $.ajax({
-        type: "GET",
-        url: "<%=request.getContextPath()%>/getCommentByMovieId?id=" + getSearch("id"),
-        dataType: "json",
-        success: function (result) {
-            if (result) {
-                $("#msg_comments_num")[0].innerHTML = result['count'] === 0 ? "此电影暂无影评" : "共" + result['count'] + "条影评";
-                var comments = result['data'];
-                $.each(comments, function (i, obj) {
-                    appendComment(
-                        obj['username'],
-                        obj['time'],
-                        obj['content'],
-                        ("images/user/" + obj['user_id'] + ".jpg"),
-                        Math.floor(obj['rate'])
-                    );
-                })
-            }
-        }
-    });
+    getCommentList();
+
     layui.use(['element', 'rate', 'form'], function () {
         var element = layui.element;
 
@@ -294,46 +275,68 @@
         //电影评分表单
         var form = layui.form;
         form.on('submit', function (data) {
-            var result = data.field;
-            result.comment_id = randomString(9);
-            //result.Book_id = Book_id;
-            //result.Book_name = Book_Name;
-            result.score = star.config.value;
-            result.time = getDate();
-            //result.User_id = User_id;
-            //result.User_name = User_name;
-            if ($.trim(data.field.comment_desc) !== "") {
+            var add_comment_req = data.field;
+            add_comment_req.id = randomString(9);
+            add_comment_req.movie_id = getSearch("id");
+            add_comment_req.rate = star.config.value;
+            add_comment_req.time = getDate();
+            add_comment_req.count = "0"
+            add_comment_req.user_id = "abc";
+            add_comment_req.username = "abc";
+            if ($.trim(data.field.content) !== "") {
                 /*$.ajax({
-                    url: "addComment.do",
+                    url: "<%=request.getContextPath()%>/addComment",
                     method: 'post',
-                    data: JSON.stringify(result),
+                    data: JSON.stringify(add_comment_req),
                     contentType: 'application/json',
                     dataType: 'json',
                     success: function (data) {
-                        if (data['insert'] === 1) {
-                            var obj = data['result'];
+                        if (data['code'] === 0) {
                             layer.msg("已发布您的评论");
-                            appendComment(
-                                obj['user_name'],
-                                obj['com_time'],
-                                obj['com_words'],
-                                ("images/user/" + obj['user_id'] + ".jpg"),
-                                Math.floor(obj['com_star'] / 2)
-                            );
+                            getCommentList();
                         } else {
                             layer.msg("发布评论失败");
                         }
                     },
                     error: function () {
+                        layer.msg("发布评论失败");
                         console.log("ajax error");
                     }
                 });*/
+                layui.$.post("<%=request.getContextPath()%>/addComment", {add_comment_req: JSON.stringify(add_comment_req)}, function(result) {
+                    var obj = JSON.parse(result)
+                    if (obj.code == 0) {
+                        layer.msg("已发布您的评论");
+                        getCommentList();
+                    } else {
+                        layer.msg("发布评论失败");
+                    }
+                });
             } else {
                 layer.tips("评论内容不能为空", $(this));
             }
             return false;
         });
     });
+
+    function getCommentList() {
+        //获取评论
+        $.ajax({
+            type: "GET",
+            url: "<%=request.getContextPath()%>/getCommentByMovieId?id=" + getSearch("id"),
+            dataType: "json",
+            success: function (result) {
+                if (result) {
+                    $("#msg_comments_num")[0].innerHTML = result['count'] === 0 ? "此电影暂无影评" : "共" + result['count'] + "条影评";
+                    var comments = result['data'];
+                    $("#comment_review")[0].empty;
+                    $.each(comments, function (i, obj) {
+                        appendComment(obj['username'], obj['time'], obj['content'], ("images/user/" + obj['user_id'] + ".jpg"), Math.floor(obj['rate']));
+                    })
+                }
+            }
+        });
+    }
 
     function appendComment(msg_username, msg_time, msg_content, msg_header, msg_star) {
         //评论用户
@@ -421,8 +424,7 @@
 
     function getDate() {
         var now = new Date();
-        return now.getFullYear() + "-" + (now.getMonth() + 1) + "-" +
-            now.getDate() + " " + now.getHours() + ":" + now.getMinutes();
+        return now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate() + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
     }
 
     function randomString(len) {

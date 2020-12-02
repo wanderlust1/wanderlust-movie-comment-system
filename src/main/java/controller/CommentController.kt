@@ -1,6 +1,8 @@
 package controller
 
 import com.google.gson.Gson
+import entity.Comment
+import entity.User
 import event.CommentEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -22,6 +24,14 @@ class CommentController {
     fun getCommentByMovieId(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
         val data = CommentEvent.CommentListRsp(mCommentService.getCommentListByMovieId(req.getParameter("id")))
+        rsp.writer.write(Gson().toJson(data))
+    }
+
+    @RequestMapping("/addComment")
+    fun addComment(req: HttpServletRequest, rsp: HttpServletResponse) {
+        rsp.contentType = "text/html;charset=UTF-8"
+        val request = Gson().fromJson(req.getParameter("add_comment_req"), Comment::class.java)
+        val data = CommentEvent.AddCommentRsp(mCommentService.addComment(request))
         rsp.writer.write(Gson().toJson(data))
     }
 

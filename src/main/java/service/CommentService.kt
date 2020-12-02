@@ -9,4 +9,6 @@ interface CommentService {
 
     fun getCommentListByMovieId(id: String): List<Comment>
 
+    fun addComment(comment: Comment): Int
+
 }

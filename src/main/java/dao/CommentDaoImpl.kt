@@ -13,4 +13,11 @@ class CommentDaoImpl: CommentDao, BaseDao() {
         return getListByTemplatedMapper("dao.CommentDaoImpl.queryCommentByMovieId", id)
     }
 
+    override fun insertComment(comment: Comment): Int {
+        openSession()
+        val result = session?.insert("dao.CommentDaoImpl.insertComment", comment)
+        session?.commit()
+        return result ?: -1
+    }
+
 }
