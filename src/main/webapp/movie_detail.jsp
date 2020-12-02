@@ -284,25 +284,6 @@
             add_comment_req.user_id = "abc";
             add_comment_req.username = "abc";
             if ($.trim(data.field.content) !== "") {
-                /*$.ajax({
-                    url: "<%=request.getContextPath()%>/addComment",
-                    method: 'post',
-                    data: JSON.stringify(add_comment_req),
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    success: function (data) {
-                        if (data['code'] === 0) {
-                            layer.msg("已发布您的评论");
-                            getCommentList();
-                        } else {
-                            layer.msg("发布评论失败");
-                        }
-                    },
-                    error: function () {
-                        layer.msg("发布评论失败");
-                        console.log("ajax error");
-                    }
-                });*/
                 layui.$.post("<%=request.getContextPath()%>/addComment", {add_comment_req: JSON.stringify(add_comment_req)}, function(result) {
                     var obj = JSON.parse(result)
                     if (obj.code == 0) {

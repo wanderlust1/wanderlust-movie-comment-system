@@ -1,7 +1,6 @@
 package entity
 
 import com.google.gson.annotations.SerializedName
-import java.lang.Exception
 import java.text.SimpleDateFormat
 
 data class Comment(
