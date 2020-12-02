@@ -40,7 +40,7 @@ data class Comment(
         val format = SimpleDateFormat("yyyy/MM/dd hh:mm:ss")
         val date1 = format.parse(time1)
         val date2 = format.parse(time2)
-        return (date1.time - date2.time).toInt()
+        return if (date1.after(date2)) 1 else -1
     }
 
 }

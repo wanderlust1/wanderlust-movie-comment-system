@@ -3,10 +3,8 @@ package service
 import dao.CommentDao
 import entity.Comment
 import event.CommentEvent
-import event.UserEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-
 
 /**
  * @author Wanderlust 2020.12.1

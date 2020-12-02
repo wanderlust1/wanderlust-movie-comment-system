@@ -1,10 +1,16 @@
 package utils
 
 import com.google.gson.Gson
+import com.sun.tools.javac.tree.TreeInfo
 import dao.MovieDaoImpl
 import entity.MovieDetail
 import org.jsoup.Jsoup
+import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 import java.util.*
 
 
@@ -52,19 +58,69 @@ fun main() {
             .header("referer", "https://www.baidu.com")
             .get()
     println(doc.text())*/
+    var start = 0
+    var limit = 20
+    var url = "https://movie.douban.com/subject/30346025/comments?status=P&sort=new_score"
     Thread {
-        val lines: List<String> = File("D:\\Wanderlust\\Documents\\WeChat Files\\wxid_sm74t61v53db22\\FileStorage\\File\\2020-11\\data.txt").readLines()
-        lines.forEach {
-            val id = it.split("    ")[5]
-            println("正在爬取 id=$id...")
-            insertToDB(id/*, proxyIpList[Random().nextInt(proxyIpList.size - 1)]*/)
+        //val lines: List<String> = File("D:\\Wanderlust\\Documents\\WeChat Files\\wxid_sm74t61v53db22\\FileStorage\\File\\2020-11\\data.txt").readLines()
+        while (start <= 160) {
+            println("正在爬取 page${start/limit + 1}...")
+            //insertToDB(id/*, proxyIpList[Random().nextInt(proxyIpList.size - 1)]*/)
+            getImg("$url&start=$start&limit=$limit")
+            start += limit
             Thread.sleep(5000)
         }
     }.start()
 }
 
+var i = 221
+
+fun getImg(url: String) {
+    val doc = Jsoup.connect(url)
+        .timeout(5000)
+        .userAgent(ua[Random().nextInt(13)])
+        .ignoreContentType(true)
+        .header("referer", "https://www.baidu.com")
+        .get()
+    val box = doc.getElementById("comments").children()
+    for (item in box) {
+        downloadImg(item.getElementsByTag("img").attr("src"))
+    }
+
+}
+
+fun downloadImg(url: String) {
+    var out: FileOutputStream? = null
+    var inputStream: BufferedInputStream? = null
+    var connection: HttpURLConnection? = null
+    val buf = ByteArray(1024)
+    var len: Int
+    try {
+        connection = URL(url).openConnection() as HttpURLConnection
+        connection.connect()
+        inputStream = BufferedInputStream(connection.inputStream)
+        out = FileOutputStream("d:\\zzzimg\\${i}.jpg")
+        while (inputStream.read(buf).also { len = it } != -1) {
+            out.write(buf, 0, len)
+        }
+        out.flush()
+        println("id=${i}下载成功")
+        i++
+    } catch (e: Exception) {
+        e.printStackTrace()
+    } finally {
+        try {
+            inputStream?.close()
+            out?.close()
+            connection?.disconnect()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+}
+
 fun insertToDB(movieId: String/*, proxy: Proxy*/) {
-    val doc = Jsoup.connect("https://movie.douban.com/subject/$movieId")
+    /*val doc = Jsoup.connect("https://movie.douban.com/subject/$movieId")
             .timeout(5000)
             //.proxy(proxy)
             .userAgent(ua[Random().nextInt(13)])
@@ -109,7 +165,9 @@ fun insertToDB(movieId: String/*, proxy: Proxy*/) {
     } else {
         println("${movie.movieName}(${movie.movieId}) 保存到数据库失败！")
     }
-    println("---------------------------------------------------")
+    println("---------------------------------------------------")*/
+
+
 }
 
 fun put(movie: MovieDetail, pl: String, content: String) {
