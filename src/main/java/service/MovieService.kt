@@ -19,7 +19,7 @@ interface MovieService {
      * @param search 查询关键词
      * @return 符合搜索条件的JSON格式的电影详情列表数据
      */
-    fun getMovieDetailById(id: String): MovieDetail
+    fun getMovieDetailById(id: String): MovieDetail?
 
     /**
      * 查询所有电影数据

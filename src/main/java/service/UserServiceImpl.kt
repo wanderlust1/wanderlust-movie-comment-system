@@ -12,11 +12,12 @@ class UserServiceImpl: UserService {
     @Autowired
     lateinit var mUserDao: UserDao
 
-    override fun login(user: User): Int {
-        return if (mUserDao.queryUser(user)?.userId == user.userId) {
-            UserEvent.SUCC
+    override fun login(user: User): UserEvent.LoginQueryRsp {
+        val queryUser = mUserDao.queryUser(user)
+        return if (queryUser?.userId == user.userId) {
+            UserEvent.LoginQueryRsp(queryUser, UserEvent.SUCC)
         } else {
-            UserEvent.FAIL
+            UserEvent.LoginQueryRsp(null, UserEvent.FAIL)
         }
     }
 

@@ -5,16 +5,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <mapper namespace="dao.CommentDaoImpl">
 
-	<select id="queryCommentByMovieId" resultType="entity.Comment" parameterType="String">
-		select movie_id as movieId, vote as count, name as username, time, comment as content, score as rate, user_id as userId, comment_id as id
-		from comment
-		where movie_id = #{0}
+	<select id="queryCommentByMovieId" resultType="entity.Comment" parameterType="Map">
+		select
+			movie_id as movieId, vote as count, name as username, time, comment as content,
+			score as rate, comment.user_id as userId, comment.comment_id as id,
+			cast (case when comment_like.user_id is null then 0 else 1 end as int) as isLike
+		from
+			comment left join comment_like on comment.comment_id = comment_like.comment_id
+			and comment_like.user_id = #{user_id}
+		where
+			movie_id = #{movie_id}
 	</select>
 
 	<insert id="insertComment" parameterType="entity.Comment">
 		insert into comment(movie_id, vote, name, time, comment, score, user_id, comment_id)
 		values(#{movieId}, #{count}, #{username}, #{time}, #{content}, #{rate}, #{userId}, #{id})
 	</insert>
+
+	<insert id="insertLike" parameterType="Map">
+		insert into comment_like(comment_id, user_id)
+		values(#{comment_id}, #{user_id})
+	</insert>
+
+	<delete id="deleteLike" parameterType="Map">
+		delete from comment_like
+		where comment_id = #{comment_id} and user_id = #{user_id}
+	</delete>
 
 </mapper>
 

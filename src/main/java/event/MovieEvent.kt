@@ -6,14 +6,7 @@ import entity.MovieDetail
 
 interface MovieEvent {
 
-    class MovieDetailRsp(val item: MovieDetail) {
-        @SerializedName("data")
-        var movieDetail: MovieDetail = MovieDetail()
-
-        init {
-            movieDetail = item
-        }
-    }
+    data class MovieDetailRsp(@SerializedName("data") val item: MovieDetail? = null)
 
     class MovieListRsp(val entityList: List<Movie>) {
         var code: Int = 0

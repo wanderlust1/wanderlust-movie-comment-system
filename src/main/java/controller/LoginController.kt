@@ -20,16 +20,20 @@ class LoginController {
     @Autowired
     lateinit var mUserService: UserService
 
+    //登录后保存全局user
+    private var gUser: User? = null
+
     @RequestMapping("/login")
     fun login(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
-        val result = mUserService.login(Gson().fromJson(req.getParameter("login_req"), User::class.java))
-        val code = when (result) {
+        val queryRsp = mUserService.login(Gson().fromJson(req.getParameter("login_req"), User::class.java))
+        gUser = queryRsp.user
+        val msg = when (queryRsp.code) {
             UserEvent.SUCC -> "登录成功"
             UserEvent.FAIL -> "登录失败，账号或密码错误"
-            else -> ""
+            else -> "登录失败，未知错误"
         }
-        rsp.writer.write(Gson().toJson(UserEvent.LoginRsp(result, code)))
+        rsp.writer.write(Gson().toJson(UserEvent.LoginRsp(queryRsp.code, msg)))
     }
 
     @RequestMapping("/register")
@@ -48,6 +52,12 @@ class LoginController {
             UserEvent.RegisterRsp(UserEvent.FAIL, "注册失败，未知错误")
         }
         rsp.writer.write(Gson().toJson(result))
+    }
+
+    @RequestMapping("/getUserProfile")
+    fun getUserProfile(req: HttpServletRequest, rsp: HttpServletResponse) {
+        rsp.contentType = "text/html;charset=UTF-8"
+        rsp.writer.write(Gson().toJson(gUser))
     }
 
 }

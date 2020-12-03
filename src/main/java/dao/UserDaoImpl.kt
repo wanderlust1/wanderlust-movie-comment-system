@@ -7,15 +7,12 @@ import org.springframework.stereotype.Repository
 class UserDaoImpl: UserDao, BaseDao() {
 
     override fun queryUser(user: User): User? {
-        openSession()
-        return session?.selectOne("dao.UserDaoImpl.queryUser", user) as User?
+        val result = query<User>("dao.UserDaoImpl.queryUser", user)
+        return if (result.isNotEmpty()) result[0] else null
     }
 
     override fun insertUser(user: User): Int {
-        openSession()
-        val result = session?.insert("dao.UserDaoImpl.insertUser", user)
-        session?.commit()
-        return result ?: -1
+        return insert("dao.UserDaoImpl.insertUser", user)
     }
 
 }

@@ -4,8 +4,12 @@ import entity.Comment
 
 interface CommentDao {
 
-    fun queryCommentByMovieId(id: String): List<Comment>
+    fun queryCommentByMovieId(movieId: String, userId: String): List<Comment>
 
     fun insertComment(comment: Comment): Int
+
+    fun insertLike(commentId: String, userId: String): Int
+
+    fun deleteLike(commentId: String, userId: String): Int
 
 }

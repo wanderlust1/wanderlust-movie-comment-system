@@ -43,8 +43,8 @@
         #msg_header_img {
             width: 100%;
             height: 100%;
-            border-radius: 10px;
-            box-shadow: 8px 8px 10px #c0c0c0;
+            border-radius: 8px;
+            box-shadow: 10px 10px 12px #c0c0c0;
         }
 
         #comment_book_msg {
@@ -67,14 +67,21 @@
         }
 
         .comment_box {
-            margin-top: 40px;
-            margin-left: -45px
+            margin-top: 20px;
+            margin-left: -45px;
+            margin-right: 8px;
+        }
+
+        .comment_box hr {
+            margin-top: 26px;
+            height: 0.5px;
         }
 
         .comment_box img {
             width: 50px;
             height: 50px;
             margin-top: -8px;
+            border-radius: 4px;
         }
 
         .user_name {
@@ -95,7 +102,7 @@
         .comment_content {
             font-size: 14px;
             line-height: 24px;
-            width: 850px;
+            width: 857px;
             margin-top: 8px;
         }
 
@@ -131,6 +138,22 @@
         #msg_desc {
             line-height: 25px;
             font-size: 14px;
+        }
+        .like_box {
+            float: right;
+        }
+        .like_box p {
+            display: inline;
+            margin-right: 3px;
+            line-height: 15px;
+            font-size: 15px;
+            color: #FF6266;
+        }
+        .like_box i {
+            margin-top: 13px;
+            font-size: 15px;
+            line-height: 15px;
+            color: #FF6266;
         }
     </style>
 </head>
@@ -217,10 +240,20 @@
 </div>
 
 <script>
+    //获得全局用户配置
+    let user_id = "";
+    let nickname = "";
+    let movie_id = getSearch("id")
+    layui.$.get("<%=request.getContextPath()%>/getUserProfile", function(result) {
+        let user = JSON.parse(result);
+        user_id = user.user_id;
+        nick_name = user.nick_name;
+        getCommentList();
+    });
     //获取电影详细信息
     $.ajax({
         type: "GET",
-        url: "<%=request.getContextPath()%>/getMovieDetailById?id=" + getSearch("id"),
+        url: "<%=request.getContextPath()%>/getMovieDetailById?id=" + movie_id,
         dataType: "json",
         success: function (result) {
             if (result) {
@@ -236,30 +269,9 @@
                 $("#msg_alias")[0].innerHTML = splitText(data['movieAlias'])
                 $("#msg_desc")[0].innerHTML = data['movieDesc'].replaceAll("　　", "<br>　　");
                 $("#msg_header_img")[0].src = "movie_cover/" + data['movieId'] + ".jpg";
-                /*var book = result['book'];
-                Book_id = book['book_id'];
-                Book_Name = book['book_name'];
-                $("#msg_state")[0].innerHTML = book['book_flag'] === 1 ? "上架中" : "已下架";
-                if (book['book_flag'] === 1) {
-                    $("#msg_state")[0].style = "background: #1E9FFF;";
-                } else {
-                    $("#msg_state")[0].style = "background: #ff5459;";
-                }
-                var comments = result['comments'];
-                $.each(comments, function (i, obj) {
-                    appendComment(
-                        obj['user_name'],
-                        obj['com_time'],
-                        obj['com_words'],
-                        ("images/user/" + obj['user_id'] + ".jpg"),
-                        Math.floor(obj['com_star'] / 2)
-                    );
-                })*/
             }
         }
     });
-
-    getCommentList();
 
     layui.use(['element', 'rate', 'form'], function () {
         var element = layui.element;
@@ -281,8 +293,8 @@
             add_comment_req.rate = star.config.value;
             add_comment_req.time = getDate();
             add_comment_req.count = "0"
-            add_comment_req.user_id = "abc";
-            add_comment_req.username = "abc";
+            add_comment_req.user_id = user_id;
+            add_comment_req.username = nick_name;
             if ($.trim(data.field.content) !== "") {
                 layui.$.post("<%=request.getContextPath()%>/addComment", {add_comment_req: JSON.stringify(add_comment_req)}, function(result) {
                     var obj = JSON.parse(result)
@@ -304,22 +316,31 @@
         //获取评论
         $.ajax({
             type: "GET",
-            url: "<%=request.getContextPath()%>/getCommentByMovieId?id=" + getSearch("id"),
+            url: "<%=request.getContextPath()%>/getCommentByMovieId?movie_id=" + movie_id + "&user_id=" + user_id,
             dataType: "json",
             success: function (result) {
                 if (result) {
                     $("#msg_comments_num")[0].innerHTML = result['count'] === 0 ? "此电影暂无影评" : "共" + result['count'] + "条影评";
                     var comments = result['data'];
-                    $("#comment_review")[0].empty;
+                    document.getElementById("comment_review").innerHTML = "";;
                     $.each(comments, function (i, obj) {
-                        appendComment(obj['username'], obj['time'], obj['content'], ("images/user/" + obj['user_id'] + ".jpg"), Math.floor(obj['rate']));
+                        appendComment(
+                            obj['id'],
+                            obj['username'],
+                            obj['time'],
+                            obj['content'],
+                            ("header/" + obj['user_id'] + ".jpg"),
+                            Math.floor(obj['rate']),
+                            obj['count'],
+                            obj['is_like']
+                        );
                     })
                 }
             }
         });
     }
 
-    function appendComment(msg_username, msg_time, msg_content, msg_header, msg_star) {
+    function appendComment(id, msg_username, msg_time, msg_content, msg_header, msg_star, msg_like, is_like) {
         //评论用户
         var name = document.createElement("h4");
         name.className = "user_name";
@@ -327,7 +348,7 @@
 
         //评论用户头像
         var header = document.createElement("img");
-        //header.src = msg_header;
+        header.src = msg_header;
 
         //评论内容
         var content = document.createElement("p");
@@ -339,12 +360,39 @@
         time.className = "comment_time";
         time.innerHTML = msg_time;
 
-
+        //点赞
+        var likeText = document.createElement("p");
+        likeText.innerHTML = msg_like;
+        var likeIcon = document.createElement("i");
+        likeIcon.className = is_like ? "layui-icon layui-icon-heart-fill" : "layui-icon layui-icon-heart";
+        var likeBox = document.createElement("div");
+        likeBox.className = "like_box";
+        likeBox.appendChild(likeText);
+        likeBox.appendChild(likeIcon);
+        likeIcon.addEventListener("click", function (e) {
+            e.preventDefault();
+            var like_req = {};
+            like_req.comment_id = id;
+            like_req.user_id = user_id;
+            like_req.like_code = likeIcon.className === "layui-icon layui-icon-heart" ?  10 : 11 ; //like_code: 10为点赞，11为取消点赞
+            layui.$.post("<%=request.getContextPath()%>/setCommentLike", {like_req: JSON.stringify(like_req)}, function(result) {
+                var res = JSON.parse(result);
+                layer.msg(res.msg);
+                if (res.resultCode === 0) {
+                    likeIcon.className = like_req.like_code === 10
+                        ? "layui-icon layui-icon-heart-fill"
+                        : "layui-icon layui-icon-heart";
+                    var num = parseInt(likeText.innerHTML);
+                    likeText.innerHTML = like_req.like_code === 10 ? num + 1 : num - 1
+                }
+            });
+        }, false);
         //评论内容区域
         var msgBox = document.createElement("div");
         msgBox.className = "layui-input-block";
         msgBox.appendChild(name);
-        msgBox.appendChild(time)
+        msgBox.appendChild(time);
+        msgBox.appendChild(likeBox);
 
         //星星
         for (let j = 0; j < msg_star; j++) {
@@ -359,8 +407,8 @@
                 msgBox.appendChild(starEmpty);
             }
         }
-
         msgBox.appendChild(content);
+        msgBox.appendChild(document.createElement("hr"))
 
         //头像框
         var headerBox = document.createElement("label");

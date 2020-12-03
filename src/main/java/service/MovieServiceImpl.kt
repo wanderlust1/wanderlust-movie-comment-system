@@ -19,7 +19,7 @@ class MovieServiceImpl: MovieService {
         return mMovieDao.queryAllMovieDetail()
     }
 
-    override fun getMovieDetailById(id: String): MovieDetail {
+    override fun getMovieDetailById(id: String): MovieDetail? {
         return mMovieDao.queryMovieDetailById(id)
     }
 

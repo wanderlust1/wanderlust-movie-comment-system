@@ -11,26 +11,24 @@ import org.springframework.stereotype.Repository
 class MovieDaoImpl: MovieDao, BaseDao() {
 
     override fun queryAllMovieDetail(): List<MovieDetail> {
-        return getListByTemplatedMapper("dao.MovieDaoImpl.queryAllMovieDetail")
+        return query("dao.MovieDaoImpl.queryAllMovieDetail")
     }
 
-    override fun queryMovieDetailById(id: String): MovieDetail {
-        return getListByTemplatedMapper<MovieDetail>("dao.MovieDaoImpl.queryMovieDetailBySearch", id)[0]
+    override fun queryMovieDetailById(id: String): MovieDetail? {
+        val result = query<MovieDetail>("dao.MovieDaoImpl.queryMovieDetailBySearch", id)
+        return if (result.isNotEmpty()) result[0] else null
     }
 
     override fun queryAllMovies(): List<Movie> {
-        return getListByTemplatedMapper("dao.MovieDaoImpl.queryAllMovies")
+        return query("dao.MovieDaoImpl.queryAllMovies")
     }
 
     override fun queryMoviesBySearch(search: String): List<Movie> {
-        return getListByTemplatedMapper("dao.MovieDaoImpl.queryMoviesBySearch", search)
+        return query("dao.MovieDaoImpl.queryMoviesBySearch", search)
     }
 
     override fun insertMovie(movie: MovieDetail): Int {
-        openSession()
-        val result = session?.insert("dao.MovieDaoImpl.insertMovie", movie)
-        session?.commit()
-        return result ?: -1
+        return insert("dao.MovieDaoImpl.insertMovie", movie)
     }
 
 }
