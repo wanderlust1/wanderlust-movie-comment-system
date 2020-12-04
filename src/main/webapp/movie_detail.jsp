@@ -29,41 +29,133 @@
         #comment_msg_box {
             margin-top: 20px;
             margin-bottom: 20px;
-            height: 300px;
             overflow: hidden;
             zoom: 1;
         }
 
         #comment_header {
             float: left;
-            width: 196px;
-            height: 275px;
+            width: 206px;
+            height: 300px;
         }
 
         #msg_header_img {
-            width: 100%;
-            height: 100%;
+            width: 196px;
+            height: 280px;
             border-radius: 8px;
             box-shadow: 10px 10px 12px #c0c0c0;
         }
 
         #comment_book_msg {
             float: left;
-            margin-left: 20px;
+            margin-left: 8px;
+            margin-top: -2px
+        }
+
+        #comment_book_msg table {
+            border-collapse: separate;
+            border-spacing: 0 2px;
         }
 
         #comment_book_msg tr {
-            line-height: 40px;
+            line-height: 30px;
+            margin-bottom: 5px;
+            margin-top: 5px;
         }
 
         .msg_hint {
             text-align: right;
             font-weight: bold;
-            font-size: 15px;
+            font-size: 14px;
         }
 
         .msg_data {
-            font-size: 15px;
+            font-size: 14px;
+            max-width: 460px;
+        }
+
+        #movie_score_main_box {
+            float: right;
+            margin-right: 10px;
+            padding-left: 15px;
+            border-left: #e3e3e3 1px solid;
+            font-size: 14px;
+            color: #8D8D8D;
+        }
+
+        #movie_score_box {
+            margin-top: 12px;
+            overflow: hidden;
+            zoom: 1;
+        }
+
+        #movie_score {
+            height: 38px;
+            display: inline;
+            float: left;
+            font-weight: normal;
+            color: #ffb800;
+            font-size: 30px;
+            line-height: 38px;
+        }
+
+        #movie_star_box {
+            float: left;
+            margin-left: 14px;
+        }
+
+        #movie_display_star {
+        }
+
+        #movie_display_star ul {
+            padding: 0;
+        }
+
+        #movie_display_star i {
+            font-size: 16px;
+        }
+
+        #movie_score_count {
+            font-size: 12px;
+            text-align: center;
+            margin-right: 5px;
+            margin-top: 3px;
+        }
+
+        #movie_score_rate_box {
+            margin-top: 10px;
+            margin-left: -8px;
+            border-collapse: separate;
+            border-spacing: 8px 5px;
+        }
+
+        .td_rate_hint {
+            font-size: 12px;
+        }
+
+        .td_rate_content {
+            width: 125px;
+            position: relative;
+        }
+
+        .td_rate_content .tip_text {
+            visibility: hidden;
+            float: right;
+            background-color: rgba(0, 0, 0, 0.43);
+            color: #f6f6f6;
+            font-size: 12px;
+            text-align: center;
+            border-radius: 3px;
+            padding: 3px 5px;
+            margin-right: 50px;
+            position: absolute;
+            right: -50px;
+            top: -10px;
+            z-index: 1;
+         }
+
+        .td_rate_content:hover .tip_text {
+            visibility: visible;
         }
 
         .comment_box {
@@ -126,22 +218,26 @@
             width: 878px;
             padding: 20px;
         }
+
         .msg_desc_box p {
             margin-top: -5px;
-            text-indent:2em;
+            text-indent: 2em;
         }
 
         .msg_desc_box legend {
             font-size: 18px;
             font-weight: 500;
         }
+
         #msg_desc {
             line-height: 25px;
             font-size: 14px;
         }
+
         .like_box {
             float: right;
         }
+
         .like_box p {
             display: inline;
             margin-right: 3px;
@@ -149,6 +245,7 @@
             font-size: 15px;
             color: #FF6266;
         }
+
         .like_box i {
             margin-top: 13px;
             font-size: 15px;
@@ -163,44 +260,84 @@
         <div id="comment_main_box" style="margin: 20px 0 30px 0;">
             <div><h2 id="main_title" style="font-weight: bold;display: inline-block"></h2><span id="msg_state"></span></div>
             <div id="comment_msg_box">
-                <div id="comment_header">
-                    <img id="msg_header_img" style="width: 100%;height: 100%">
-                </div>
+                <div id="comment_header"><img id="msg_header_img"></div>
                 <div id="comment_book_msg">
                     <table>
                         <tr>
-                            <td class="msg_hint">导演：</td>
-                            <td id="msg_director" class="msg_data"></td>
+                            <td class="msg_hint" valign="top">导演：</td>
+                            <td id="msg_director" class="msg_data" valign="top"></td>
                         </tr>
                         <tr>
-                            <td class="msg_hint">演员：</td>
-                            <td id="msg_actors" class="msg_data"></td>
+                            <td class="msg_hint" valign="top">演员：</td>
+                            <td id="msg_actors" class="msg_data" valign="top"></td>
                         </tr>
                         <tr>
-                            <td class="msg_hint">电影分类：</td>
-                            <td id="msg_type" class="msg_data"></td>
+                            <td class="msg_hint" valign="top">分类：</td>
+                            <td id="msg_type" class="msg_data" valign="top"></td>
                         </tr>
                         <tr>
-                            <td class="msg_hint">上映日期：</td>
-                            <td id="msg_publish" class="msg_data"></td>
+                            <td class="msg_hint" valign="top">日期：</td>
+                            <td id="msg_publish" class="msg_data" valign="top"></td>
                         </tr>
                         <tr>
-                            <td class="msg_hint">地区语言：</td>
-                            <td id="msg_area" class="msg_data"></td>
+                            <td class="msg_hint" valign="top">语言：</td>
+                            <td id="msg_area" class="msg_data" valign="top"></td>
                         </tr>
                         <tr>
-                            <td class="msg_hint">别名：</td>
-                            <td id="msg_alias" class="msg_data"></td>
+                            <td class="msg_hint" valign="top">别名：</td>
+                            <td id="msg_alias" class="msg_data" valign="top"></td>
                         </tr>
                         <tr>
-                            <td class="msg_hint">IMDb：</td>
-                            <td id="msg_imdb" class="msg_data"></td>
+                            <td class="msg_hint" valign="top">IMDb：</td>
+                            <td id="msg_imdb" class="msg_data" valign="top"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div id="movie_score_main_box">
+                    <div>电影评分</div>
+                    <div id="movie_score_box">
+                        <div id="movie_score">7.8</div>
+                        <div id="movie_star_box">
+                            <div id="movie_display_star"></div>
+                            <p id="movie_score_count">15616人评分</p>
+                        </div>
+                    </div>
+                    <table id="movie_score_rate_box">
+                        <tr>
+                            <td class="td_rate_hint">5星</td>
+                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_5">
+                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                            </div><span class="tip_text" id="star_text_5">40%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td_rate_hint">4星</td>
+                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_4">
+                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                            </div><span class="tip_text" id="star_text_4">60%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td_rate_hint">3星</td>
+                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_3">
+                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                            </div><span class="tip_text" id="star_text_3">20%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td_rate_hint">2星</td>
+                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_2">
+                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                            </div><span class="tip_text" id="star_text_2">8%</span></td>
+                        </tr>
+                        <tr>
+                            <td class="td_rate_hint">1星</td>
+                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_1">
+                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                            </div><span class="tip_text" id="star_text_1">100%</span></td>
                         </tr>
                     </table>
                 </div>
             </div>
 
-            <fieldset class="layui-elem-field msg_desc_box" style="margin: 40px 0 30px;">
+            <fieldset class="layui-elem-field msg_desc_box" style="margin: 25px 0 30px;">
                 <legend>电影简介</legend>
                 <p id="msg_desc"></fieldset>
 
@@ -250,36 +387,15 @@
         nick_name = user.nick_name;
         getCommentList();
     });
-    //获取电影详细信息
-    $.ajax({
-        type: "GET",
-        url: "<%=request.getContextPath()%>/getMovieDetailById?id=" + movie_id,
-        dataType: "json",
-        success: function (result) {
-            if (result) {
-                var data = result['data'];
-                document.title = data['movieName'] + " - 影评";
-                $("#main_title")[0].innerHTML = data['movieName'];
-                $("#msg_publish")[0].innerHTML = data['movieDate'];
-                $("#msg_director")[0].innerHTML = data['director'];
-                $("#msg_type")[0].innerHTML = splitText(data['movieType']);
-                $("#msg_area")[0].innerHTML = data['movieArea'] + " / " + data['movieLang'];
-                $("#msg_imdb")[0].innerHTML = data['movieIMDb'];
-                $("#msg_actors")[0].innerHTML = splitText(data['actors']);
-                $("#msg_alias")[0].innerHTML = splitText(data['movieAlias'])
-                $("#msg_desc")[0].innerHTML = data['movieDesc'].replaceAll("　　", "<br>　　");
-                $("#msg_header_img")[0].src = "movie_cover/" + data['movieId'] + ".jpg";
-            }
-        }
-    });
 
+    //layui配置
     layui.use(['element', 'rate', 'form'], function () {
         var element = layui.element;
 
         //评分
         var rate = layui.rate;
         var star = rate.render({
-            elem: '#comment_score',  //绑定元素
+            elem: '#comment_score',
             value: 5,
             text: true
         });
@@ -301,6 +417,8 @@
                     if (obj.code == 0) {
                         layer.msg("已发布您的评论");
                         getCommentList();
+                        var count = parseInt($("#movie_score_count")[0].innerHTML.replace("人评分", ""))
+                        $("#movie_score_count")[0].innerHTML = (count + 1) + "人评分"
                     } else {
                         layer.msg("发布评论失败");
                     }
@@ -310,6 +428,51 @@
             }
             return false;
         });
+    });
+
+    //获取电影详细信息
+    $.ajax({
+        type: "GET",
+        url: "<%=request.getContextPath()%>/getMovieDetailById?id=" + movie_id,
+        dataType: "json",
+        success: function (result) {
+            if (result) {
+                var data = result['data'];
+                document.title = data['movieName'] + " - 影评";
+                $("#main_title")[0].innerHTML = data['movieName'];
+                $("#msg_publish")[0].innerHTML = splitText(data['movieDate']);
+                $("#msg_director")[0].innerHTML = data['director'];
+                $("#msg_type")[0].innerHTML = splitText(data['movieType']);
+                $("#msg_area")[0].innerHTML = data['movieArea'] + " / " + data['movieLang'];
+                $("#msg_imdb")[0].innerHTML = data['movieIMDb'];
+                $("#msg_actors")[0].innerHTML = splitText(data['actors']);
+                $("#msg_alias")[0].innerHTML = splitText(data['movieAlias'])
+                $("#msg_desc")[0].innerHTML = data['movieDesc'].replaceAll("　　", "<br>　　");
+                $("#msg_header_img")[0].src = "movie_cover/" + data['movieId'] + ".jpg";
+                $("#movie_score")[0].innerHTML = data['rate'];
+                $("#movie_score_count")[0].innerHTML = data['rateCount'] + "人评分";
+                layui.rate.render({
+                    elem: '#movie_display_star',
+                    value: (parseFloat(data['rate']) / 2),
+                    readonly: true,
+                    half: true
+                });
+                var percent = [];
+                data['ratePer'].split("/").forEach(function (value, index, array) {
+                    percent[index] = value.substr(3);
+                });
+                layui.element.progress('star_5', percent[0]);
+                $("#star_text_5")[0].innerHTML = percent[0];
+                layui.element.progress('star_4', percent[1]);
+                $("#star_text_4")[0].innerHTML = percent[1];
+                layui.element.progress('star_3', percent[2]);
+                $("#star_text_3")[0].innerHTML = percent[2];
+                layui.element.progress('star_2', percent[3]);
+                $("#star_text_2")[0].innerHTML = percent[3];
+                layui.element.progress('star_1', percent[4]);
+                $("#star_text_1")[0].innerHTML = percent[4];
+            }
+        }
     });
 
     function getCommentList() {
@@ -377,13 +540,15 @@
             like_req.like_code = likeIcon.className === "layui-icon layui-icon-heart" ?  10 : 11 ; //like_code: 10为点赞，11为取消点赞
             layui.$.post("<%=request.getContextPath()%>/setCommentLike", {like_req: JSON.stringify(like_req)}, function(result) {
                 var res = JSON.parse(result);
-                layer.msg(res.msg);
-                if (res.resultCode === 0) {
+                if (res.result_code === 0) {
                     likeIcon.className = like_req.like_code === 10
                         ? "layui-icon layui-icon-heart-fill"
                         : "layui-icon layui-icon-heart";
                     var num = parseInt(likeText.innerHTML);
                     likeText.innerHTML = like_req.like_code === 10 ? num + 1 : num - 1
+                    layer.msg(like_req.like_code === 10 ? "点赞成功" : "已取消");
+                } else {
+                    layer.msg("出错了");
                 }
             });
         }, false);
@@ -430,7 +595,7 @@
         let text = "";
         for (let i = 0; i < list.length; i++) {
             let temp = text + list[i]
-            if (temp.length > 50) {
+            if (temp.length > 90) {
                 text += "等";
                 break;
             } else if (i === list.length - 1) {

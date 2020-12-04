@@ -38,15 +38,7 @@ class CommentController {
     fun setCommentLike(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
         val request = Gson().fromJson(req.getParameter("like_req"), CommentEvent.LikeCommentReq::class.java)
-        val code = mCommentService.setLike(request)
-        val msg = if (code == CommentEvent.SUCC && request.likeCode == CommentEvent.LIKE) {
-            "点赞成功"
-        } else if (code == CommentEvent.SUCC && request.likeCode == CommentEvent.DISLIKE) {
-            "已取消"
-        } else {
-            "出错了"
-        }
-        rsp.writer.write(Gson().toJson(CommentEvent.LikeCommentRes(code, msg)))
+        rsp.writer.write(Gson().toJson(CommentEvent.LikeCommentRes(mCommentService.setLike(request))))
     }
 
 }

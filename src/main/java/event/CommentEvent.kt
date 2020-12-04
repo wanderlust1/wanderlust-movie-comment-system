@@ -33,6 +33,6 @@ interface CommentEvent {
         @SerializedName("like_code") val likeCode: Int = 0
     )
 
-    data class LikeCommentRes(val resultCode: Int = 1, val msg: String = "")
+    data class LikeCommentRes(@SerializedName("result_code") val resultCode: Int = 1)
 
 }
