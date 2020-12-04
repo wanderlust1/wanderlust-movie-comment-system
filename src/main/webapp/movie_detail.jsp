@@ -280,7 +280,7 @@
                             <td id="msg_publish" class="msg_data" valign="top"></td>
                         </tr>
                         <tr>
-                            <td class="msg_hint" valign="top">语言：</td>
+                            <td class="msg_hint" valign="top">地区：</td>
                             <td id="msg_area" class="msg_data" valign="top"></td>
                         </tr>
                         <tr>
@@ -443,7 +443,7 @@
                 $("#msg_publish")[0].innerHTML = splitText(data['movieDate']);
                 $("#msg_director")[0].innerHTML = data['director'];
                 $("#msg_type")[0].innerHTML = splitText(data['movieType']);
-                $("#msg_area")[0].innerHTML = data['movieArea'] + " / " + data['movieLang'];
+                $("#msg_area")[0].innerHTML = splitText(data['movieArea']) + " / " + splitText(data['movieLang']);
                 $("#msg_imdb")[0].innerHTML = data['movieIMDb'];
                 $("#msg_actors")[0].innerHTML = splitText(data['actors']);
                 $("#msg_alias")[0].innerHTML = splitText(data['movieAlias'])
@@ -595,7 +595,7 @@
         let text = "";
         for (let i = 0; i < list.length; i++) {
             let temp = text + list[i]
-            if (temp.length > 90) {
+            if (temp.length > 130) {
                 text += "等";
                 break;
             } else if (i === list.length - 1) {
@@ -618,7 +618,8 @@
 
     function getDate() {
         var now = new Date();
-        return now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate() + " " + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
+        return now.getFullYear() + "/" + (now.getMonth() + 1) + "/" + now.getDate() + " "
+            + now.getHours() + ":" + now.getMinutes() + ":" + now.getSeconds();
     }
 
     function randomString(len) {
