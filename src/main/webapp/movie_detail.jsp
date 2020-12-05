@@ -147,9 +147,8 @@
             text-align: center;
             border-radius: 3px;
             padding: 3px 5px;
-            margin-right: 50px;
             position: absolute;
-            right: -50px;
+            right: 0px;
             top: -10px;
             z-index: 1;
          }
@@ -173,7 +172,7 @@
             width: 50px;
             height: 50px;
             margin-top: -8px;
-            border-radius: 4px;
+            border-radius: 25px;
         }
 
         .user_name {
@@ -205,8 +204,9 @@
 
         .comment_box_divide legend {
             font-size: 15px;
-            font-weight: bold;
+            font-weight: normal;
             color: #1E9FFF;
+            letter-spacing: 1px;
         }
 
         .comment_box i {
@@ -225,8 +225,10 @@
         }
 
         .msg_desc_box legend {
-            font-size: 18px;
-            font-weight: 500;
+            font-size: 15px;
+            font-weight: normal;
+            color: #1E9FFF;
+            letter-spacing: 1px;
         }
 
         #msg_desc {

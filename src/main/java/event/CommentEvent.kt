@@ -28,9 +28,16 @@ interface CommentEvent {
     data class AddCommentRsp(val code: Int = 1)
 
     data class LikeCommentReq(
-        @SerializedName("comment_id") val commentId: String = "",
-        @SerializedName("user_id") val userId: String = "",
-        @SerializedName("like_code") val likeCode: Int = 0
+
+        @SerializedName("comment_id")
+        val commentId: String = "",
+
+        @SerializedName("user_id")
+        val userId: String = "",
+
+        @SerializedName("like_code")
+        val likeCode: Int = 0
+
     )
 
     data class LikeCommentRes(@SerializedName("result_code") val resultCode: Int = 1)
