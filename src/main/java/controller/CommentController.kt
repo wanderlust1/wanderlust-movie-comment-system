@@ -23,10 +23,8 @@ class CommentController {
     @RequestMapping("/getCommentByMovieId")
     fun getCommentByMovieId(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
-        println(Gson().toJson(req.getParameter("movie_id") + "  " + req.getParameter("user_id")))
         val data = mCommentService.getCommentListByMovieId(req.getParameter("movie_id"), req.getParameter("user_id"))
         rsp.writer.write(Gson().toJson(CommentEvent.CommentListRsp(data)))
-        println(Gson().toJson(CommentEvent.CommentListRsp(data)))
     }
 
     @RequestMapping("/addComment")
