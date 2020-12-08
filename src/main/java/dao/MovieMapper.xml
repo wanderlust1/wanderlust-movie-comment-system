@@ -18,10 +18,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where movieName like '%' + #{0} + '%' or movieAlias like '%' + #{0} + '%' or movieId like '%' + #{0} + '%'
 	</select>
 
-	<!-- 查询所有电影详细数据 -->
-	<select id="queryAllMovies" resultType="entity.Movie">
-		select movie_id as id, title, rate
-		from movie
+	<!-- 查询所有电影详细数据，传入过滤器 -->
+	<select id="queryAllMovies" resultType="entity.Movie" parameterType="entity.MovieFilter">
+		select movie_id as id, title, movie.rate
+		from movie, movie_detail
+		<where>
+			movie.movie_id = movie_detail.movieId and movieType like '%' + #{style} + '%' and movieDate like '%' + #{year} + '%' and
+			<foreach item="item" collection="area" separator="or" open="(" close=")" index="">
+				movieArea like '%' + #{item} + '%'
+			</foreach>
+		</where>
+		<choose>
+			<when test="sort == 'rate'">
+				order by rate DESC
+			</when>
+			<when test="sort == 'name'">
+				order by title
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
 	</select>
 
 	<!-- 根据关键词查询所有相关电影的详细数据 -->

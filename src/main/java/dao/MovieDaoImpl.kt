@@ -2,6 +2,7 @@ package dao
 
 import entity.Movie
 import entity.MovieDetail
+import entity.MovieFilter
 import org.springframework.stereotype.Repository
 
 /**
@@ -19,8 +20,8 @@ class MovieDaoImpl: MovieDao, BaseDao() {
         return if (result.isNotEmpty()) result[0] else null
     }
 
-    override fun queryAllMovies(): List<Movie> {
-        return query("dao.MovieDaoImpl.queryAllMovies")
+    override fun queryAllMovies(params: MovieFilter): List<Movie> {
+        return query("dao.MovieDaoImpl.queryAllMovies", params)
     }
 
     override fun queryMoviesBySearch(search: String): List<Movie> {

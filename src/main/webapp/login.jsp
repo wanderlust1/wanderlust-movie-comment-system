@@ -32,7 +32,7 @@
             });
         });
         function toIndex() {
-            location.href = "index.jsp"
+            location.href = "movie_index.jsp"
         }
     </script>
     <style>

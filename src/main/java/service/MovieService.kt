@@ -25,7 +25,7 @@ interface MovieService {
      * 查询所有电影数据
      * @return JSON格式的电影列表数据
      */
-    fun getAllMovies(): List<Movie>
+    fun getAllMovies(oriParams: Map<Any?, Any?>): List<Movie>
 
     /**
      * 查询含指定关键词的电影数据

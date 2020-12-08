@@ -28,7 +28,7 @@ class MovieController {
     @RequestMapping("/getAllMovies")
     fun getAllMovies(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
-        val data = MovieEvent.MovieListRsp(mMovieService.getAllMovies())
+        val data = MovieEvent.MovieListRsp(mMovieService.getAllMovies(req.parameterMap))
         rsp.writer.write(Gson().toJson(data))
     }
 

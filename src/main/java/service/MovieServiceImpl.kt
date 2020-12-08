@@ -3,6 +3,7 @@ package service
 import dao.MovieDao
 import entity.Movie
 import entity.MovieDetail
+import entity.MovieFilter
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -23,8 +24,19 @@ class MovieServiceImpl: MovieService {
         return mMovieDao.queryMovieDetailById(id)
     }
 
-    override fun getAllMovies(): List<Movie> {
-        return mMovieDao.queryAllMovies()
+    @ExperimentalStdlibApi
+    override fun getAllMovies(oriParams: Map<Any?, Any?>): List<Movie> {
+        val params = buildMap<String, String> {
+            oriParams.forEach {
+                put(it.key as String, (it.value as Array<*>)[0].toString())
+            }
+        }
+        val filter = MovieFilter()
+        filter.sort = params["sort"] ?: ""
+        filter.style = MovieFilter.filter(params["style"] ?: "")
+        filter.area = MovieFilter.filter(params["area"] ?: "").split(" ")
+        filter.year = MovieFilter.filter(params["year"] ?: "")
+        return mMovieDao.queryAllMovies(filter)
     }
 
     override fun getMoviesBySearch(search: String): List<Movie> {
