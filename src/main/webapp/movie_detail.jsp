@@ -514,6 +514,9 @@
         //评论用户头像
         var header = document.createElement("img");
         header.src = msg_header;
+        header.onerror = function(event) {
+            header.src = 'header/default_head.png'
+        }
 
         //评论内容
         var content = document.createElement("p");

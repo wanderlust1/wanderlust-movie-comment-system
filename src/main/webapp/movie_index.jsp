@@ -118,7 +118,7 @@
     <div>
     <div class="div_header">
         <div id="div_header_search">
-            <h2>选电影</h2>
+            <a href="user_edit.jsp"><h2>选电影</h2></a>
             <div id="search_box">
                 <div class="layui-inline"><div class="layui-input-inline edit_input_div">
                     <input type="text" name="Book_num" autocomplete="off" placeholder="请输入电影名称、ID等关键字..." class="layui-input" id="input">
