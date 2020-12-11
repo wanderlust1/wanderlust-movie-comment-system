@@ -2,7 +2,6 @@ package controller
 
 import com.google.gson.Gson
 import entity.Comment
-import entity.User
 import event.CommentEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller

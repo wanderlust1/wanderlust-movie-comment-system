@@ -13,6 +13,7 @@ import java.io.File
 import javax.imageio.stream.FileImageOutputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpSession
 
 /**
  * @author Wanderlust 2020.10.17
@@ -23,16 +24,16 @@ class LoginController {
     @Autowired
     lateinit var mUserService: UserService
 
-    //登录后保存全局user
-    private var gUser: User? = null
-
     @RequestMapping("/login")
-    fun login(req: HttpServletRequest, rsp: HttpServletResponse) {
+    fun login(req: HttpServletRequest, rsp: HttpServletResponse, session: HttpSession) {
         rsp.contentType = "text/html;charset=UTF-8"
         val queryRsp = mUserService.login(Gson().fromJson(req.getParameter("login_req"), User::class.java))
-        gUser = queryRsp.user
         val msg = when (queryRsp.code) {
-            UserEvent.SUCC -> "登录成功"
+            UserEvent.SUCC -> {
+                session.setAttribute("user_id", queryRsp.user?.userId)
+                session.setAttribute("nick_name", queryRsp.user?.nickName)
+                "登录成功"
+            }
             UserEvent.FAIL -> "登录失败，账号或密码错误"
             else -> "登录失败，未知错误"
         }
@@ -57,21 +58,20 @@ class LoginController {
         rsp.writer.write(Gson().toJson(result))
     }
 
-    @RequestMapping("/getUserProfile")
-    fun getUserProfile(req: HttpServletRequest, rsp: HttpServletResponse) {
-        rsp.contentType = "text/html;charset=UTF-8"
-        rsp.writer.write(Gson().toJson(gUser))
-    }
-
     @RequestMapping("/uploadHeader")
-    fun uploadHeader(req: HttpServletRequest, rsp: HttpServletResponse, file: MultipartFile) {
+    fun uploadHeader(req: HttpServletRequest, rsp: HttpServletResponse, file: MultipartFile, session: HttpSession) {
         rsp.contentType = "text/html;charset=UTF-8"
-        saveUserHeader(req.getParameter("user_id"), file.bytes)
-        rsp.writer.write(Gson().toJson(gUser))
+        val headerPath = session.servletContext.getRealPath("/") + "header\\${req.getParameter("user_id")}.jpg"
+        println(headerPath)
+        rsp.writer.write(Gson().toJson(UserEvent.UploadImageRsp(if (saveImage(headerPath, file.bytes)) {
+            UserEvent.SUCC
+        } else {
+            UserEvent.FAIL
+        })))
     }
 
-    private fun saveUserHeader(id: String, bytes: ByteArray): Boolean {
-        val path = "C:\\Users\\abc\\IdeaProjects\\WebDemo1\\src\\main\\webapp\\header\\$id.jpg"
+    //保存头像文件到 /main/webapp/header
+    private fun saveImage(path: String, bytes: ByteArray): Boolean {
         val imageOutput = FileImageOutputStream(File(path))
         if (bytes.size < 3) return false
         return try {

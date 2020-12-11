@@ -7,6 +7,16 @@
     <script src="js/jquery-2.1.3.min.js"></script>
     <script src="layui/layui.js"></script>
     <script src="layui/layui.all.js"></script>
+
+    <%
+        if (session.getAttribute("user_id") == null || session.getAttribute("user_id") == "") {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        String user_id = (String) session.getAttribute("user_id");
+        String nick_name = (String) session.getAttribute("nick_name");
+    %>
+
     <style>
         #msg_state {
             display: inline-block;
@@ -379,16 +389,10 @@
 </div>
 
 <script>
-    //获得全局用户配置
-    let user_id = "";
-    let nickname = "";
+    let user_id = "<%= user_id %>";
+    let nick_name = "<%= nick_name %>";
     let movie_id = getSearch("id")
-    layui.$.get("<%=request.getContextPath()%>/getUserProfile", function(result) {
-        let user = JSON.parse(result);
-        user_id = user.user_id;
-        nick_name = user.nick_name;
-        getCommentList();
-    });
+    getCommentList();
 
     //layui配置
     layui.use(['element', 'rate', 'form'], function () {
@@ -413,6 +417,7 @@
             add_comment_req.count = "0"
             add_comment_req.user_id = user_id;
             add_comment_req.username = nick_name;
+            console.log(add_comment_req);
             if ($.trim(data.field.content) !== "") {
                 layui.$.post("<%=request.getContextPath()%>/addComment", {add_comment_req: JSON.stringify(add_comment_req)}, function(result) {
                     var obj = JSON.parse(result)

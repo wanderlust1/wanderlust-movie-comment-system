@@ -120,7 +120,7 @@
             , url: '<%=request.getContextPath()%>/uploadHeader' //上传接口
             , accept: 'images'
             , data: {
-                user_id: "123",
+                user_id: "aaa",
             }
             , before: function (obj) {
                 //预读本地文件示例，不支持ie8

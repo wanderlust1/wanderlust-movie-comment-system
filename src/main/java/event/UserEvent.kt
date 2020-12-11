@@ -16,4 +16,6 @@ interface UserEvent {
 
     data class RegisterRsp(val code: Int, val msg: String)
 
+    data class UploadImageRsp(val code: Int)
+
 }
