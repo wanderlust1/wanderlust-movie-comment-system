@@ -25,4 +25,9 @@ class UserDaoImpl: UserDao, BaseDao() {
         return update("dao.UserDaoImpl.updateNickname", params)
     }
 
+    override fun updateHeader(id: String, newHeader: String): Int {
+        val params = mapOf(Pair("id", id), Pair("new_header", newHeader))
+        return update("dao.UserDaoImpl.updateHeader", params)
+    }
+
 }

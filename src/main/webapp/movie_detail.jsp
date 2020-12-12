@@ -8,6 +8,9 @@
     <script src="layui/layui.js"></script>
     <script src="layui/layui.all.js"></script>
 
+    <link href="nav/nav_style.css" rel="stylesheet"/>
+    <script src="nav/nav_script.js"></script>
+
     <%
         if (session.getAttribute("user_id") == null || session.getAttribute("user_id") == "") {
             response.sendRedirect("login.jsp");
@@ -15,6 +18,7 @@
         }
         String user_id = (String) session.getAttribute("user_id");
         String nick_name = (String) session.getAttribute("nick_name");
+        String header = (String) session.getAttribute("header");
     %>
 
     <style>
@@ -28,12 +32,6 @@
             margin: -6px 8px 0;
             border-radius: 8px;
             padding: 5px;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         #comment_msg_box {
@@ -268,125 +266,139 @@
     </style>
 </head>
 <body>
-    <div class="main_body_box">
-        <!-- 内容主体区域 -->
-        <div id="comment_main_box" style="margin: 20px 0 30px 0;">
-            <div><h2 id="main_title" style="font-weight: bold;display: inline-block"></h2><span id="msg_state"></span></div>
-            <div id="comment_msg_box">
-                <div id="comment_header"><img id="msg_header_img"></div>
-                <div id="comment_book_msg">
-                    <table>
-                        <tr>
-                            <td class="msg_hint" valign="top">导演：</td>
-                            <td id="msg_director" class="msg_data" valign="top"></td>
-                        </tr>
-                        <tr>
-                            <td class="msg_hint" valign="top">演员：</td>
-                            <td id="msg_actors" class="msg_data" valign="top"></td>
-                        </tr>
-                        <tr>
-                            <td class="msg_hint" valign="top">分类：</td>
-                            <td id="msg_type" class="msg_data" valign="top"></td>
-                        </tr>
-                        <tr>
-                            <td class="msg_hint" valign="top">日期：</td>
-                            <td id="msg_publish" class="msg_data" valign="top"></td>
-                        </tr>
-                        <tr>
-                            <td class="msg_hint" valign="top">地区：</td>
-                            <td id="msg_area" class="msg_data" valign="top"></td>
-                        </tr>
-                        <tr>
-                            <td class="msg_hint" valign="top">别名：</td>
-                            <td id="msg_alias" class="msg_data" valign="top"></td>
-                        </tr>
-                        <tr>
-                            <td class="msg_hint" valign="top">IMDb：</td>
-                            <td id="msg_imdb" class="msg_data" valign="top"></td>
-                        </tr>
-                    </table>
-                </div>
-                <div id="movie_score_main_box">
-                    <div>电影评分</div>
-                    <div id="movie_score_box">
-                        <div id="movie_score">7.8</div>
-                        <div id="movie_star_box">
-                            <div id="movie_display_star"></div>
-                            <p id="movie_score_count">15616人评分</p>
-                        </div>
-                    </div>
-                    <table id="movie_score_rate_box">
-                        <tr>
-                            <td class="td_rate_hint">5星</td>
-                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_5">
-                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
-                            </div><span class="tip_text" id="star_text_5">40%</span></td>
-                        </tr>
-                        <tr>
-                            <td class="td_rate_hint">4星</td>
-                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_4">
-                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
-                            </div><span class="tip_text" id="star_text_4">60%</span></td>
-                        </tr>
-                        <tr>
-                            <td class="td_rate_hint">3星</td>
-                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_3">
-                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
-                            </div><span class="tip_text" id="star_text_3">20%</span></td>
-                        </tr>
-                        <tr>
-                            <td class="td_rate_hint">2星</td>
-                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_2">
-                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
-                            </div><span class="tip_text" id="star_text_2">8%</span></td>
-                        </tr>
-                        <tr>
-                            <td class="td_rate_hint">1星</td>
-                            <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_1">
-                                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
-                            </div><span class="tip_text" id="star_text_1">100%</span></td>
-                        </tr>
-                    </table>
+<div class="main_body_box">
+<div id="navigation" style="width: 100%; font-weight: lighter; font-family: Calibri, sans-serif"">
+    <ul class="layui-nav layui-bg-black">
+        <li class="layui-nav-item" id="nav_logo"><a href="javascript:">电影评论系统 by Wanderlust</a></li>
+        <li class="layui-nav-item"><a href="movie_index.jsp">找电影</a></li>
+        <li class="layui-nav-item" style="float: right">
+            <a href="javascript:">
+                <img src="header/<%=header%>.jpg" class="layui-nav-img" id="nav_header">
+                <span id="nav_id" style="margin-right: 5px;"><%=nick_name%></span>
+            </a>
+            <dl class="layui-nav-child">
+                <dd><a href="user_detail.jsp">个人信息</a></dd>
+                <dd><a href="javascript:logout('<%=request.getContextPath()%>');">退出登录</a></dd>
+            </dl>
+        </li>
+    </ul>
+</div>
+<div id="comment_main_box" style="margin: 20px auto 30px; width:930px;">
+    <div><h2 id="main_title" style="font-weight: bold;display: inline-block"></h2><span id="msg_state"></span></div>
+    <div id="comment_msg_box">
+        <div id="comment_header"><img id="msg_header_img"></div>
+        <div id="comment_book_msg">
+            <table>
+                <tr>
+                    <td class="msg_hint" valign="top">导演：</td>
+                    <td id="msg_director" class="msg_data" valign="top"></td>
+                </tr>
+                <tr>
+                    <td class="msg_hint" valign="top">演员：</td>
+                    <td id="msg_actors" class="msg_data" valign="top"></td>
+                </tr>
+                <tr>
+                    <td class="msg_hint" valign="top">分类：</td>
+                    <td id="msg_type" class="msg_data" valign="top"></td>
+                </tr>
+                <tr>
+                    <td class="msg_hint" valign="top">日期：</td>
+                    <td id="msg_publish" class="msg_data" valign="top"></td>
+                </tr>
+                <tr>
+                    <td class="msg_hint" valign="top">地区：</td>
+                    <td id="msg_area" class="msg_data" valign="top"></td>
+                </tr>
+                <tr>
+                    <td class="msg_hint" valign="top">别名：</td>
+                    <td id="msg_alias" class="msg_data" valign="top"></td>
+                </tr>
+                <tr>
+                    <td class="msg_hint" valign="top">IMDb：</td>
+                    <td id="msg_imdb" class="msg_data" valign="top"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="movie_score_main_box">
+            <div>电影评分</div>
+            <div id="movie_score_box">
+                <div id="movie_score">7.8</div>
+                <div id="movie_star_box">
+                    <div id="movie_display_star"></div>
+                    <p id="movie_score_count">15616人评分</p>
                 </div>
             </div>
-
-            <fieldset class="layui-elem-field msg_desc_box" style="margin: 25px 0 30px;">
-                <legend>电影简介</legend>
-                <p id="msg_desc"></fieldset>
-
-            <fieldset class="layui-elem-field layui-field-title comment_box_divide" style="width: 920px;">
-                <legend>我的影评</legend>
-            </fieldset>
-
-            <div>
-                <form action="" method="post" name="book_comment" class="layui-form" style="margin-left: -40px">
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">电影评分</label>
-                        <div class="layui-input-block">
-                            <div id="comment_score" style="margin-top: -3px"></div>
-                        </div>
-                    </div>
-                    <div class="layui-form-item layui-form-text">
-                        <label class="layui-form-label">电影评价</label>
-                        <div class="layui-input-inline">
-                                <textarea placeholder="输入简短的文本评价一下这部电影吧" class="layui-textarea" name="content"
-                                          style="width:850px;height: 120px" id="comment_content_text"></textarea>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <div class="layui-input-block">
-                            <button class="layui-btn layui-btn-normal" lay-submit style="float:right;margin-right:10px;">发布影评</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <fieldset class="layui-elem-field layui-field-title comment_box_divide" style="width: 920px;">
-                <legend id="msg_comments_num">此电影暂无影评</legend>
-            </fieldset>
-            <div id="comment_review"></div>
+            <table id="movie_score_rate_box">
+                <tr>
+                    <td class="td_rate_hint">5星</td>
+                    <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_5">
+                        <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                    </div><span class="tip_text" id="star_text_5">40%</span></td>
+                </tr>
+                <tr>
+                    <td class="td_rate_hint">4星</td>
+                    <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_4">
+                        <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                    </div><span class="tip_text" id="star_text_4">60%</span></td>
+                </tr>
+                <tr>
+                    <td class="td_rate_hint">3星</td>
+                    <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_3">
+                        <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                    </div><span class="tip_text" id="star_text_3">20%</span></td>
+                </tr>
+                <tr>
+                    <td class="td_rate_hint">2星</td>
+                    <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_2">
+                        <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                    </div><span class="tip_text" id="star_text_2">8%</span></td>
+                </tr>
+                <tr>
+                    <td class="td_rate_hint">1星</td>
+                    <td class="td_rate_content"><div class="layui-progress movie_score_rate" lay-filter="star_1">
+                        <div class="layui-progress-bar layui-bg-blue" lay-percent="0%"></div>
+                    </div><span class="tip_text" id="star_text_1">100%</span></td>
+                </tr>
+            </table>
         </div>
     </div>
+
+    <fieldset class="layui-elem-field msg_desc_box" style="margin: 25px 0 30px;">
+        <legend>电影简介</legend>
+        <p id="msg_desc"></fieldset>
+
+    <fieldset class="layui-elem-field layui-field-title comment_box_divide" style="width: 920px;">
+        <legend>我的影评</legend>
+    </fieldset>
+
+    <div>
+        <form action="" method="post" name="book_comment" class="layui-form" style="margin-left: -40px">
+            <div class="layui-form-item">
+                <label class="layui-form-label">电影评分</label>
+                <div class="layui-input-block">
+                    <div id="comment_score" style="margin-top: -3px"></div>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">电影评价</label>
+                <div class="layui-input-inline">
+                        <textarea placeholder="输入简短的文本评价一下这部电影吧" class="layui-textarea" name="content"
+                                  style="width:850px;height: 120px" id="comment_content_text"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-normal" lay-submit style="float:right;margin-right:10px;">发布影评</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <fieldset class="layui-elem-field layui-field-title comment_box_divide" style="width: 920px;">
+        <legend id="msg_comments_num">此电影暂无影评</legend>
+    </fieldset>
+    <div id="comment_review"></div>
+</div>
 </div>
 
 <script>
@@ -398,7 +410,7 @@
     //layui配置
     layui.use(['element', 'rate', 'form'], function () {
         var element = layui.element;
-
+        layui.element.init();
         //评分
         var rate = layui.rate;
         var star = rate.render({
@@ -500,7 +512,7 @@
                             obj['username'],
                             obj['time'],
                             obj['content'],
-                            ("header/" + obj['user_id'] + ".jpg"),
+                            ("header/" + obj['header'] + ".jpg"),
                             Math.floor(obj['rate']),
                             obj['count'],
                             obj['is_like']

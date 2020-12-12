@@ -12,4 +12,6 @@ interface UserDao {
 
     fun updateNickname(id: String, newNickname: String): Int
 
+    fun updateHeader(id: String, newHeader: String): Int
+
 }

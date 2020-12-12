@@ -13,6 +13,6 @@ interface UserService {
 
     fun modifyNickname(id: String, newNickname: String): Int
 
-    fun saveHeaderImage(path: String, bytes: ByteArray): Int
+    fun modifyHeader(id: String, newHeader: String, newHeaderName: String, oldHeader: String?, imageStream: ByteArray): Int
 
 }

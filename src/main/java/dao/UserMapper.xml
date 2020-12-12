@@ -6,14 +6,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="dao.UserDaoImpl">
 
 	<select id="queryUser" resultType="entity.User" parameterType="entity.User">
-		select user_id as userId, nick_name as nickName, password
+		select user_id as userId, nick_name as nickName, password, header
 		from users
 		where user_id = #{userId} and password = #{password}
 	</select>
 
 	<insert id="insertUser" parameterType="entity.User">
-		insert into users(user_id, nick_name, password)
-		values(#{userId}, #{nickName}, #{password})
+		insert into users(user_id, nick_name, password, header)
+		values(#{userId}, #{nickName}, #{password}, #{userId})
 	</insert>
 
 	<update id="updatePassword" parameterType="Map">
@@ -28,5 +28,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where user_id = #{id}
 	</update>
 
-</mapper>
+	<update id="updateHeader" parameterType="Map">
+		update users
+		set header = #{new_header}
+		where user_id = #{id}
+	</update>
 
+</mapper>

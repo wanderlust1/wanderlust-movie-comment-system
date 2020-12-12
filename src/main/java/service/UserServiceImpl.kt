@@ -6,6 +6,7 @@ import event.UserEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.io.File
+import java.util.*
 import javax.imageio.stream.FileImageOutputStream
 
 @Service
@@ -47,17 +48,30 @@ class UserServiceImpl: UserService {
         }
     }
 
-    override fun saveHeaderImage(path: String, bytes: ByteArray): Int {
-        val imageOutput = FileImageOutputStream(File(path))
-        if (bytes.size < 3) return UserEvent.FAIL
-        return try {
-            imageOutput.write(bytes, 0, bytes.size)
-            UserEvent.SUCC
-        } catch (e: Exception) {
+    override fun modifyHeader(id: String, newHeader: String, newHeaderName: String, oldHeader: String?, imageStream: ByteArray): Int {
+        return if (mUserDao.updateHeader(id, newHeaderName) == 1) { //先更新数据库信息，再写入头像文件
+            val imageOutput = FileImageOutputStream(File(newHeader))
+            if (imageStream.size < 3) return UserEvent.FAIL
+            return try {
+                imageOutput.write(imageStream, 0, imageStream.size)
+                oldHeader?.deleteFile()
+                UserEvent.SUCC
+            } catch (e: Exception) {
+                UserEvent.FAIL
+            } finally {
+                imageOutput.close()
+            }
+        } else {
             UserEvent.FAIL
-        } finally {
-            imageOutput.close()
         }
+    }
+
+    private fun String.deleteFile(): Boolean {
+        val file = File(this)
+        return if (file.isFile && file.exists()) {
+            file.delete()
+            true
+        } else false
     }
 
 }

@@ -29,6 +29,7 @@ class LoginController {
             UserEvent.SUCC -> {
                 session.setAttribute("user_id", queryRsp.user?.userId)
                 session.setAttribute("nick_name", queryRsp.user?.nickName)
+                session.setAttribute("header", queryRsp.user?.header)
                 "登录成功"
             }
             UserEvent.FAIL -> "登录失败，账号或密码错误"
@@ -53,6 +54,15 @@ class LoginController {
             UserEvent.RegisterRsp(UserEvent.FAIL, "注册失败，未知错误")
         }
         rsp.writer.write(Gson().toJson(result))
+    }
+
+    @RequestMapping("/logout")
+    fun logout(req: HttpServletRequest, rsp: HttpServletResponse, session: HttpSession) {
+        rsp.contentType = "text/html;charset=UTF-8"
+        session.removeAttribute("user_id")
+        session.removeAttribute("nick_name")
+        session.removeAttribute("header")
+        rsp.writer.write(Gson().toJson(1))
     }
 
 }

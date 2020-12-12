@@ -24,7 +24,9 @@ data class Comment(
     var movieId: String = "",
 
     @SerializedName("is_like")
-    var isLike: Int = 0
+    var isLike: Int = 0,
+
+    var header: String = "default_header"
 
 ): Comparable<Comment> {
 

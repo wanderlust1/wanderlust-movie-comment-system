@@ -10,6 +10,8 @@ data class User (
     var password: String = "",
 
     @SerializedName("nick_name")
-    var nickName: String = ""
+    var nickName: String = "",
+
+    var header: String = ""
 
 )

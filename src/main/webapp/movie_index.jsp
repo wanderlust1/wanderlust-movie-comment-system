@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>找电影</title>
     <link href="layui/css/layui.css" rel="stylesheet"/>
+    <link href="nav/nav_style.css" rel="stylesheet"/>
+    <script src="nav/nav_script.js"></script>
     <script src="js/jquery-2.1.3.min.js"></script>
     <script src="layui/layui.js"></script>
 
@@ -15,13 +17,11 @@
         }
         String user_id = (String) session.getAttribute("user_id");
         String nick_name = (String) session.getAttribute("nick_name");
+        String header = (String) session.getAttribute("header");
     %>
 
     <style type="text/css">
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
             overflow-y: scroll;
         }
         #div_list_container {
@@ -125,7 +125,23 @@
     </style>
 </head>
 <body>
-    <div>
+    <div id="navigation" style="width: 100%; font-weight: lighter; font-family: Calibri, sans-serif"">
+        <ul class="layui-nav layui-bg-black">
+            <li class="layui-nav-item" id="nav_logo"><a href="javascript:">电影评论系统 by Wanderlust</a></li>
+            <li class="layui-nav-item"><a href="movie_index.jsp">找电影</a></li>
+            <li class="layui-nav-item" style="float: right">
+                <a href="javascript:">
+                    <img src="header/<%=header%>.jpg" class="layui-nav-img" id="nav_header">
+                    <span id="nav_id" style="margin-right: 5px;"><%=nick_name%></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="user_detail.jsp">个人信息</a></dd>
+                    <dd><a href="javascript:logout('<%=request.getContextPath()%>');">退出登录</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <div style="width: 880px;margin: 0 auto;">
     <div class="div_header">
         <div id="div_header_search">
             <a href="user_detail.jsp"><h2>找电影</h2></a>
@@ -184,6 +200,8 @@
     <div id="footer"></div>
     </div>
 <script>
+    console.log("<%=user_id%>");
+
     layui.use(['element', 'layer', 'form'], function () {
         var element = layui.element;
         var form = layui.form;

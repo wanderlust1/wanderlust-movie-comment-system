@@ -14,6 +14,7 @@
         }
         String user_id = (String) session.getAttribute("user_id");
         String nick_name = (String) session.getAttribute("nick_name");
+        String header = (String) session.getAttribute("header");
     %>
 
     <style>
@@ -136,7 +137,7 @@
         var element = layui.element;
         var upload = layui.upload;
         var $ = layui.$;
-        $('#user_header').attr('src', 'header/<%=user_id%>.jpg' + '?h=' + Math.random())
+        $('#user_header').attr('src', 'header/<%=header%>.jpg')
         upload.render({
             elem: '#header_edit'
             , url: '<%=request.getContextPath()%>/uploadHeader'

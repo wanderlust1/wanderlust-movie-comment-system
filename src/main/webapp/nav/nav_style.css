@@ -1,0 +1,6 @@
+.layui-nav .layui-nav-child dd.layui-this a {
+    background-color: #1E9FFF;
+}
+.layui-nav .layui-this:after, .layui-nav-bar, .layui-nav-tree .layui-nav-itemed:after {
+    background-color: #1E9FFF;
+}
