@@ -16,5 +16,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		values(#{userId}, #{nickName}, #{password})
 	</insert>
 
+	<update id="updatePassword" parameterType="Map">
+		update users
+		set password = #{new_password}
+		where user_id = #{id}
+	</update>
+
+	<update id="updateNickname" parameterType="Map">
+		update users
+		set nick_name = #{new_nickname}
+		where user_id = #{id}
+	</update>
+
 </mapper>
 

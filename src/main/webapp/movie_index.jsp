@@ -7,6 +7,16 @@
     <link href="layui/css/layui.css" rel="stylesheet"/>
     <script src="js/jquery-2.1.3.min.js"></script>
     <script src="layui/layui.js"></script>
+
+    <%
+        if (session.getAttribute("user_id") == null || session.getAttribute("user_id") == "") {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        String user_id = (String) session.getAttribute("user_id");
+        String nick_name = (String) session.getAttribute("nick_name");
+    %>
+
     <style type="text/css">
         body {
             display: flex;
@@ -118,7 +128,7 @@
     <div>
     <div class="div_header">
         <div id="div_header_search">
-            <a href="user_edit.jsp"><h2>找电影</h2></a>
+            <a href="user_detail.jsp"><h2>找电影</h2></a>
             <div id="search_box">
                 <div class="layui-inline"><div class="layui-input-inline edit_input_div">
                     <input type="text" name="Book_num" autocomplete="off" placeholder="请输入电影名称、ID等关键字..." class="layui-input" id="input">
@@ -240,7 +250,7 @@
     }
 
     function setFooter(text) {
-        $("#footer")[0].innerHTML = text + "<span><br>电影评论系统 - Wanderlust</span>"
+        $("#footer")[0].innerHTML = text + "<span><br>电影评论系统 by Wanderlust</span>"
     }
 
     function addMovieItem(id, name, rate) {

@@ -15,4 +15,14 @@ class UserDaoImpl: UserDao, BaseDao() {
         return insert("dao.UserDaoImpl.insertUser", user)
     }
 
+    override fun updatePassword(id: String, newPassword: String): Int {
+        val params = mapOf(Pair("id", id), Pair("new_password", newPassword))
+        return update("dao.UserDaoImpl.updatePassword", params)
+    }
+
+    override fun updateNickname(id: String, newNickname: String): Int {
+        val params = mapOf(Pair("id", id), Pair("new_nickname", newNickname))
+        return update("dao.UserDaoImpl.updateNickname", params)
+    }
+
 }

@@ -18,4 +18,8 @@ interface UserEvent {
 
     data class UploadImageRsp(val code: Int)
 
+    data class ModifyInfoReq(val id: String, val newValue: String)
+
+    data class ModifyInfoRsp(val code: Int)
+
 }

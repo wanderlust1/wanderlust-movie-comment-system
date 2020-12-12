@@ -7,10 +7,7 @@ import org.apache.ibatis.exceptions.IbatisException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.multipart.MultipartFile
 import service.UserService
-import java.io.File
-import javax.imageio.stream.FileImageOutputStream
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 import javax.servlet.http.HttpSession
@@ -56,32 +53,6 @@ class LoginController {
             UserEvent.RegisterRsp(UserEvent.FAIL, "注册失败，未知错误")
         }
         rsp.writer.write(Gson().toJson(result))
-    }
-
-    @RequestMapping("/uploadHeader")
-    fun uploadHeader(req: HttpServletRequest, rsp: HttpServletResponse, file: MultipartFile, session: HttpSession) {
-        rsp.contentType = "text/html;charset=UTF-8"
-        val headerPath = session.servletContext.getRealPath("/") + "header\\${req.getParameter("user_id")}.jpg"
-        println(headerPath)
-        rsp.writer.write(Gson().toJson(UserEvent.UploadImageRsp(if (saveImage(headerPath, file.bytes)) {
-            UserEvent.SUCC
-        } else {
-            UserEvent.FAIL
-        })))
-    }
-
-    //保存头像文件到 /main/webapp/header
-    private fun saveImage(path: String, bytes: ByteArray): Boolean {
-        val imageOutput = FileImageOutputStream(File(path))
-        if (bytes.size < 3) return false
-        return try {
-            imageOutput.write(bytes, 0, bytes.size)
-            true
-        } catch (e: Exception) {
-            false
-        } finally {
-            imageOutput.close()
-        }
     }
 
 }

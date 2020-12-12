@@ -8,4 +8,8 @@ interface UserDao {
 
     fun insertUser(user: User): Int
 
+    fun updatePassword(id: String, newPassword: String): Int
+
+    fun updateNickname(id: String, newNickname: String): Int
+
 }

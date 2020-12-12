@@ -7,14 +7,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="queryCommentByMovieId" resultType="entity.Comment" parameterType="Map">
 		select
-			movie_id as movieId, vote as count, name as username, time, comment as content,
-			score as rate, comment.user_id as userId, comment.comment_id as id,
+			movie_id as movieId, vote as count, nick_name as username, time, comment as content,
+			score as rate, users.user_id as userId, comment.comment_id as id,
 			cast (case when comment_like.user_id is null then 0 else 1 end as int) as isLike
 		from
 			comment left join comment_like on comment.comment_id = comment_like.comment_id
-			and comment_like.user_id = #{user_id}
+			and comment_like.user_id = #{user_id}, users
 		where
-			movie_id = #{movie_id}
+			movie_id = #{movie_id} and users.user_id = comment.user_id
 	</select>
 
 	<insert id="insertComment" parameterType="entity.Comment">

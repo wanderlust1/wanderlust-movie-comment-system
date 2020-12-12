@@ -9,4 +9,10 @@ interface UserService {
 
     fun register(user: User): Int
 
+    fun modifyPassword(id: String, newPassword: String): Int
+
+    fun modifyNickname(id: String, newNickname: String): Int
+
+    fun saveHeaderImage(path: String, bytes: ByteArray): Int
+
 }

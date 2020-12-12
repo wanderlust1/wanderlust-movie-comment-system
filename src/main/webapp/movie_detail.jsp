@@ -248,6 +248,7 @@
 
         .like_box {
             float: right;
+            cursor: pointer;
         }
 
         .like_box p {
@@ -369,7 +370,7 @@
                         <label class="layui-form-label">电影评价</label>
                         <div class="layui-input-inline">
                                 <textarea placeholder="输入简短的文本评价一下这部电影吧" class="layui-textarea" name="content"
-                                          style="width:850px;height: 120px"></textarea>
+                                          style="width:850px;height: 120px" id="comment_content_text"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -417,15 +418,15 @@
             add_comment_req.count = "0"
             add_comment_req.user_id = user_id;
             add_comment_req.username = nick_name;
-            console.log(add_comment_req);
             if ($.trim(data.field.content) !== "") {
                 layui.$.post("<%=request.getContextPath()%>/addComment", {add_comment_req: JSON.stringify(add_comment_req)}, function(result) {
                     var obj = JSON.parse(result)
                     if (obj.code == 0) {
                         layer.msg("已发布您的评论");
                         getCommentList();
-                        var count = parseInt($("#movie_score_count")[0].innerHTML.replace("人评分", ""))
-                        $("#movie_score_count")[0].innerHTML = (count + 1) + "人评分"
+                        var count = parseInt($("#movie_score_count")[0].innerHTML.replace("人评分", ""));
+                        $("#movie_score_count")[0].innerHTML = (count + 1) + "人评分";
+                        $("#comment_content_text").val('');
                     } else {
                         layer.msg("发布评论失败");
                     }
