@@ -1,9 +1,10 @@
 package dao
 
+import org.apache.ibatis.exceptions.IbatisException
 import org.apache.ibatis.io.Resources
 import org.apache.ibatis.session.SqlSession
 import org.apache.ibatis.session.SqlSessionFactoryBuilder
-import java.io.IOException
+import java.lang.Exception
 
 /**
  * 所有DAO层类的父类，包含增删查改的快捷方法，并保存factory和session对象。
@@ -18,23 +19,14 @@ open class BaseDao {
      * 打开对话。注意：每次请求数据库操作前必须调用。
      */
     fun openSession() {
-        try {
-            session = factory.openSession()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+        session = factory.openSession()
     }
 
     /**
      * 提交操作，并关闭对话。注意：每次请求数据库操作后必须调用。
      */
     fun commit() {
-        try {
-            session?.commit()
-            session?.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
+        session?.commit()
     }
 
     /**
@@ -44,12 +36,20 @@ open class BaseDao {
      * @return 指定实体类的数据列表
      */
     protected inline fun <reified T> query(mapperPath: String, params: Any? = null): List<T> {
-        openSession()
         val result = mutableListOf<T>()
-        session?.selectList(mapperPath, params)?.forEach {
-            if (it is T) result.add(it)
+        try {
+            openSession()
+            session?.selectList(mapperPath, params)?.forEach {
+                if (it is T) result.add(it)
+            }
+            commit()
+        } catch (e: Exception) {
+        } finally {
+            try {
+                session?.close()
+            } catch (e: Exception) {
+            }
         }
-        commit()
         return result
     }
 
@@ -60,10 +60,19 @@ open class BaseDao {
      * @return 1为操作成功，否则失败
      */
     protected fun insert(mapperPath: String, params: Any): Int {
-        openSession()
-        val result = session?.insert(mapperPath, params)
-        commit()
-        return result ?: -1
+        return try {
+            openSession()
+            val result = session?.insert(mapperPath, params)
+            commit()
+            result ?: -1
+        } catch (e: Exception) {
+            if (e is IbatisException) -2 else -1
+        } finally {
+            try {
+                session?.close()
+            } catch (e: Exception) {
+            }
+        }
     }
 
     /**
@@ -73,10 +82,19 @@ open class BaseDao {
      * @return 1为操作成功，否则失败
      */
     protected fun update(mapperPath: String, params: Any): Int {
-        openSession()
-        val result = session?.update(mapperPath, params)
-        commit()
-        return result ?: -1
+        return try {
+            openSession()
+            val result = session?.update(mapperPath, params)
+            commit()
+            result ?: -1
+        } catch (e: Exception) {
+            -1
+        } finally {
+            try {
+                session?.close()
+            } catch (e: Exception) {
+            }
+        }
     }
 
     /**
@@ -86,10 +104,19 @@ open class BaseDao {
      * @return 1为操作成功，否则失败
      */
     protected fun delete(mapperPath: String, params: Any): Int {
-        openSession()
-        val result = session?.delete(mapperPath, params)
-        commit()
-        return result ?: -1
+        return try {
+            openSession()
+            val result = session?.delete(mapperPath, params)
+            commit()
+            result ?: -1
+        } catch (e: Exception) {
+            -1
+        } finally {
+            try {
+                session?.close()
+            } catch (e: Exception) {
+            }
+        }
     }
 
 }

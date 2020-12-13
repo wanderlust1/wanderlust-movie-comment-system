@@ -42,16 +42,13 @@ class LoginController {
     fun register(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
         val request = Gson().fromJson(req.getParameter("register_req"), User::class.java)
-        val result = try {
-            if (mUserService.register(request) == UserEvent.SUCC) {
+        val result = when (mUserService.register(request)) {
+            UserEvent.SUCC ->
                 UserEvent.RegisterRsp(UserEvent.SUCC, "注册成功")
-            } else {
+            UserEvent.EXISTED ->
+                UserEvent.RegisterRsp(UserEvent.EXISTED, "注册失败，该账号已存在")
+            else ->
                 UserEvent.RegisterRsp(UserEvent.FAIL, "注册失败，未知错误")
-            }
-        } catch (e: IbatisException) {
-            UserEvent.RegisterRsp(UserEvent.EXISTED, "注册失败，该账号已存在")
-        } catch (e: Exception) {
-            UserEvent.RegisterRsp(UserEvent.FAIL, "注册失败，未知错误")
         }
         rsp.writer.write(Gson().toJson(result))
     }

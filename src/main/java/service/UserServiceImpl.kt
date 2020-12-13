@@ -25,10 +25,10 @@ class UserServiceImpl: UserService {
     }
 
     override fun register(user: User): Int {
-        return if (mUserDao.insertUser(user) == 1) {
-            UserEvent.SUCC
-        } else {
-            UserEvent.FAIL
+        return when (mUserDao.insertUser(user)) {
+            1    -> UserEvent.SUCC
+            -2   -> UserEvent.EXISTED
+            else -> UserEvent.FAIL
         }
     }
 
