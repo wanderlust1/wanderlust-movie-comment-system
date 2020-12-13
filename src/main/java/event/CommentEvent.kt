@@ -2,6 +2,7 @@ package event
 
 import com.google.gson.annotations.SerializedName
 import entity.Comment
+import entity.Like
 
 interface CommentEvent {
 
@@ -12,17 +13,8 @@ interface CommentEvent {
         const val DISLIKE = 11
     }
 
-    class CommentListRsp(val entityList: List<Comment>) {
-        var code: Int = 0
-        var count: Int = 0
-
-        @SerializedName("data")
-        var list: List<Comment> = mutableListOf()
-
-        init {
-            list = entityList
-            count = entityList.size
-        }
+    data class CommentListRsp(val data: List<Comment> = mutableListOf(), var code: Int = 0, var count: Int = 0) {
+        init { count = data.size }
     }
 
     data class AddCommentRsp(val code: Int = 1)
@@ -41,5 +33,13 @@ interface CommentEvent {
     )
 
     data class LikeCommentRes(@SerializedName("result_code") val resultCode: Int = 1)
+
+    data class LikeRecordRes(val list: List<Like> = mutableListOf(), var count: Int = 0) {
+        init { count = list.size }
+    }
+
+    data class CommentRecordRes(val list: List<Comment> = mutableListOf(), var count: Int = 0) {
+        init { count = list.size }
+    }
 
 }

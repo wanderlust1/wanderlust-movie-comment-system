@@ -40,4 +40,18 @@ class CommentController {
         rsp.writer.write(Gson().toJson(CommentEvent.LikeCommentRes(mCommentService.setLike(request))))
     }
 
+    @RequestMapping("/getCommentRecordById")
+    fun getCommentRecordById(req: HttpServletRequest, rsp: HttpServletResponse) {
+        rsp.contentType = "text/html;charset=UTF-8"
+        val result = CommentEvent.CommentRecordRes(mCommentService.getCommentRecordById(req.getParameter("id")))
+        rsp.writer.write(Gson().toJson(result))
+    }
+
+    @RequestMapping("/getLikeRecordById")
+    fun getLikeRecordById(req: HttpServletRequest, rsp: HttpServletResponse) {
+        rsp.contentType = "text/html;charset=UTF-8"
+        val result = CommentEvent.LikeRecordRes(mCommentService.getLikeRecordById(req.getParameter("id")))
+        rsp.writer.write(Gson().toJson(result))
+    }
+
 }

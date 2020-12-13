@@ -1,5 +1,9 @@
 package entity
 
+/**
+ * 获取电影列表时的查询参数，含多个过滤条件。
+ * @author Wanderlust 2020.12.7
+ */
 data class MovieFilter (
 
     var sort: String = "",

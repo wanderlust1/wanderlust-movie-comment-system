@@ -1,5 +1,9 @@
 package entity
 
+/**
+ * 电影详情实体类
+ * @author Wanderlust 2020.12.13
+ */
 data class MovieDetail(
 
     var movieId: String = "0",

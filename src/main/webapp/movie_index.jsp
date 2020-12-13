@@ -131,7 +131,7 @@
             <li class="layui-nav-item"><a href="movie_index.jsp">找电影</a></li>
             <li class="layui-nav-item" style="float: right">
                 <a href="javascript:">
-                    <img src="header/<%=header%>.jpg" class="layui-nav-img" id="nav_header">
+                    <img src="header/<%=header%>.jpg" class="layui-nav-img" id="nav_header" onerror="this.src = 'header/default_head.png'">
                     <span id="nav_id" style="margin-right: 5px;"><%=nick_name%></span>
                 </a>
                 <dl class="layui-nav-child">
@@ -199,9 +199,8 @@
     <div id="div_list_container"></div>
     <div id="footer"></div>
     </div>
-<script>
-    console.log("<%=user_id%>");
 
+<script>
     layui.use(['element', 'layer', 'form'], function () {
         var element = layui.element;
         var form = layui.form;

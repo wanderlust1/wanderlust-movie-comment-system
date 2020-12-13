@@ -3,6 +3,10 @@ package entity
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 
+/**
+ * 评论实体类
+ * @author Wanderlust 2020.12.13
+ */
 data class Comment(
 
     var id: String = "", //评论ID
@@ -26,7 +30,10 @@ data class Comment(
     @SerializedName("is_like")
     var isLike: Int = 0,
 
-    var header: String = "default_header"
+    var header: String = "",
+
+    @SerializedName("movie_name")
+    var movieName: String = ""
 
 ): Comparable<Comment> {
 

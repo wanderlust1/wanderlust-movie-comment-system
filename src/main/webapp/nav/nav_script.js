@@ -8,3 +8,9 @@ function logout(context) {
         }
     });
 }
+
+layui.$('#nav_logo').on('click', function () {
+    layer.tips('Wanderlust', '#nav_logo', {
+      tips: [3, '#1e9fff']
+    });
+});

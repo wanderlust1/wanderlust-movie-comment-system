@@ -2,6 +2,10 @@ package entity
 
 import com.google.gson.annotations.SerializedName
 
+/**
+ * 用户实体类
+ * @author Wanderlust 2020.11.12
+ */
 data class User (
 
     @SerializedName("user_id")

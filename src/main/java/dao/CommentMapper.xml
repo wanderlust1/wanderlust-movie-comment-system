@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<select id="queryCommentByMovieId" resultType="entity.Comment" parameterType="Map">
 		select
-			movie_id as movieId, vote as count, nick_name as username, time, comment as content,
+			movie_id as movieId, vote as count, nick_name as username, comment.time, comment as content,
 			score as rate, users.user_id as userId, comment.comment_id as id, users.header as header,
 			cast (case when comment_like.user_id is null then 0 else 1 end as int) as isLike
 		from
@@ -18,19 +18,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 
 	<insert id="insertComment" parameterType="entity.Comment">
-		insert into comment(movie_id, vote, name, time, comment, score, user_id, comment_id)
-		values(#{movieId}, #{count}, #{username}, #{time}, #{content}, #{rate}, #{userId}, #{id})
+		insert into comment(movie_id, vote, time, comment, score, user_id, comment_id)
+		values(#{movieId}, #{count}, #{time}, #{content}, #{rate}, #{userId}, #{id})
 	</insert>
 
 	<insert id="insertLike" parameterType="Map">
-		insert into comment_like(comment_id, user_id)
-		values(#{comment_id}, #{user_id})
+		insert into comment_like(comment_id, user_id, time)
+		values(#{comment_id}, #{user_id}, #{time})
 	</insert>
 
 	<delete id="deleteLike" parameterType="Map">
 		delete from comment_like
 		where comment_id = #{comment_id} and user_id = #{user_id}
 	</delete>
+
+	<select id="queryCommentRecordById" resultType="entity.Comment" parameterType="String">
+		select movie.movie_id as movieId, time, comment as content, score as rate, title as movieName
+		from comment, movie
+		where user_id = #{0} and comment.movie_id = movie.movie_id
+	</select>
+
+	<select id="queryLikeRecordById" resultType="entity.Like" parameterType="String">
+		select
+			movie.title as movieName, movie.movie_id as movieId, comment.comment_id as commentId,
+			comment.comment as commentContent, comment.user_id as userId, comment_like.time as time,
+			users.nick_name as commentUserName, users.header as commentUserHeader, score as rate
+		from
+			comment_like, comment, movie, users
+		where
+			comment_like.user_id = #{0} and comment_like.comment_id = comment.comment_id and
+			comment.movie_id = movie.movie_id and users.user_id = comment.user_id
+	</select>
 
 </mapper>
 

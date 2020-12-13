@@ -1,6 +1,7 @@
 package service
 
 import entity.Comment
+import entity.Like
 import event.CommentEvent
 
 /**
@@ -13,5 +14,9 @@ interface CommentService {
     fun addComment(comment: Comment): Int
 
     fun setLike(event: CommentEvent.LikeCommentReq): Int
+
+    fun getCommentRecordById(id: String): List<Comment>
+
+    fun getLikeRecordById(id: String): List<Like>
 
 }

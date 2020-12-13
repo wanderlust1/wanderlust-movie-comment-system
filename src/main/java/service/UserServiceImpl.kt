@@ -54,7 +54,7 @@ class UserServiceImpl: UserService {
             if (imageStream.size < 3) return UserEvent.FAIL
             return try {
                 imageOutput.write(imageStream, 0, imageStream.size)
-                oldHeader?.deleteFile()
+                File(oldHeader ?: "").deleteFile()
                 UserEvent.SUCC
             } catch (e: Exception) {
                 UserEvent.FAIL
@@ -66,10 +66,9 @@ class UserServiceImpl: UserService {
         }
     }
 
-    private fun String.deleteFile(): Boolean {
-        val file = File(this)
-        return if (file.isFile && file.exists()) {
-            file.delete()
+    private fun File.deleteFile(): Boolean {
+        return if (isFile && exists()) {
+            delete()
             true
         } else false
     }

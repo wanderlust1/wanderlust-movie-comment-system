@@ -1,6 +1,7 @@
 package dao
 
 import entity.Comment
+import entity.Like
 import org.springframework.stereotype.Repository
 
 /**
@@ -18,14 +19,22 @@ class CommentDaoImpl: CommentDao, BaseDao() {
         return insert("dao.CommentDaoImpl.insertComment", comment)
     }
 
-    override fun insertLike(commentId: String, userId: String): Int {
-        val params = mapOf(Pair("comment_id", commentId), Pair("user_id", userId))
+    override fun insertLike(commentId: String, userId: String, time: String): Int {
+        val params = mapOf(Pair("comment_id", commentId), Pair("user_id", userId), Pair("time", time))
         return insert("dao.CommentDaoImpl.insertLike", params)
     }
 
     override fun deleteLike(commentId: String, userId: String): Int {
         val params = mapOf(Pair("comment_id", commentId), Pair("user_id", userId))
         return delete("dao.CommentDaoImpl.deleteLike", params)
+    }
+
+    override fun queryCommentRecordById(id: String): List<Comment> {
+        return query("dao.CommentDaoImpl.queryCommentRecordById", id)
+    }
+
+    override fun queryLikeRecordById(id: String): List<Like> {
+        return query("dao.CommentDaoImpl.queryLikeRecordById", id)
     }
 
 }

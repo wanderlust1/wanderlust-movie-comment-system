@@ -271,9 +271,10 @@
     <ul class="layui-nav layui-bg-black">
         <li class="layui-nav-item" id="nav_logo"><a href="javascript:">电影评论系统 by Wanderlust</a></li>
         <li class="layui-nav-item"><a href="movie_index.jsp">找电影</a></li>
+        <li class="layui-nav-item layui-this"><a href="javascript:" id="nav_movie_name"></a></li>
         <li class="layui-nav-item" style="float: right">
             <a href="javascript:">
-                <img src="header/<%=header%>.jpg" class="layui-nav-img" id="nav_header">
+                <img src="header/<%=header%>.jpg" class="layui-nav-img" id="nav_header" onerror="this.src = 'header/default_head.png'">
                 <span id="nav_id" style="margin-right: 5px;"><%=nick_name%></span>
             </a>
             <dl class="layui-nav-child">
@@ -459,6 +460,7 @@
             if (result) {
                 var data = result['data'];
                 document.title = data['movieName'] + " - 影评";
+                $("#nav_movie_name")[0].innerHTML = data['movieName'];
                 $("#main_title")[0].innerHTML = data['movieName'];
                 $("#msg_publish")[0].innerHTML = splitText(data['movieDate']);
                 $("#msg_director")[0].innerHTML = data['director'];
