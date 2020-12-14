@@ -32,14 +32,16 @@ interface CommentEvent {
 
     )
 
-    data class LikeCommentRes(@SerializedName("result_code") val resultCode: Int = 1)
+    data class LikeCommentRsp(@SerializedName("result_code") val resultCode: Int = 1)
 
-    data class LikeRecordRes(val list: List<Like> = mutableListOf(), var count: Int = 0) {
+    data class LikeRecordRsp(val list: List<Like> = mutableListOf(), var count: Int = 0) {
         init { count = list.size }
     }
 
-    data class CommentRecordRes(val list: List<Comment> = mutableListOf(), var count: Int = 0) {
+    data class CommentRecordRsp(val list: List<Comment> = mutableListOf(), var count: Int = 0) {
         init { count = list.size }
     }
+
+    data class DeleteCommentRsp(val code: Int = 1)
 
 }

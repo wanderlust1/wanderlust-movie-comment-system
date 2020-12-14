@@ -13,6 +13,8 @@ interface CommentDao {
 
     fun deleteLike(commentId: String, userId: String): Int
 
+    fun deleteComment(id: String): Int
+
     fun queryCommentRecordById(id: String): List<Comment>
 
     fun queryLikeRecordById(id: String): List<Like>

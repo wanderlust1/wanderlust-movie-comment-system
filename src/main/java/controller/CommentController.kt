@@ -37,20 +37,27 @@ class CommentController {
     fun setCommentLike(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
         val request = Gson().fromJson(req.getParameter("like_req"), CommentEvent.LikeCommentReq::class.java)
-        rsp.writer.write(Gson().toJson(CommentEvent.LikeCommentRes(mCommentService.setLike(request))))
+        rsp.writer.write(Gson().toJson(CommentEvent.LikeCommentRsp(mCommentService.setLike(request))))
     }
 
     @RequestMapping("/getCommentRecordById")
     fun getCommentRecordById(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
-        val result = CommentEvent.CommentRecordRes(mCommentService.getCommentRecordById(req.getParameter("id")))
+        val result = CommentEvent.CommentRecordRsp(mCommentService.getCommentRecordById(req.getParameter("id")))
         rsp.writer.write(Gson().toJson(result))
     }
 
     @RequestMapping("/getLikeRecordById")
     fun getLikeRecordById(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
-        val result = CommentEvent.LikeRecordRes(mCommentService.getLikeRecordById(req.getParameter("id")))
+        val result = CommentEvent.LikeRecordRsp(mCommentService.getLikeRecordById(req.getParameter("id")))
+        rsp.writer.write(Gson().toJson(result))
+    }
+
+    @RequestMapping("/deleteComment")
+    fun deleteComment(req: HttpServletRequest, rsp: HttpServletResponse) {
+        rsp.contentType = "text/html;charset=UTF-8"
+        val result = CommentEvent.DeleteCommentRsp(mCommentService.deleteComment(req.getParameter("id")))
         rsp.writer.write(Gson().toJson(result))
     }
 

@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</delete>
 
 	<select id="queryCommentRecordById" resultType="entity.Comment" parameterType="String">
-		select movie.movie_id as movieId, time, comment as content, score as rate, title as movieName
+		select movie.movie_id as movieId, time, comment as content, score as rate, title as movieName, comment.comment_id as id, vote as count
 		from comment, movie
 		where user_id = #{0} and comment.movie_id = movie.movie_id
 	</select>
@@ -49,6 +49,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			comment_like.user_id = #{0} and comment_like.comment_id = comment.comment_id and
 			comment.movie_id = movie.movie_id and users.user_id = comment.user_id
 	</select>
+
+	<delete id="deleteComment" parameterType="String">
+		delete from comment where comment_id = #{0}
+	</delete>
 
 </mapper>
 

@@ -38,7 +38,7 @@
         .header_box {
             height: 190px;
             width: 190px;
-            margin: 0 auto 20px;
+            margin: 0 auto 15px;
             position: relative;
             border-radius: 95px;
             box-shadow: 0 3px 6px rgba(149, 157, 165, 0.65);
@@ -66,6 +66,24 @@
         #user_header {
             height: 100%;
             width: 100%;
+        }
+
+        #user_statistics {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 15px;
+            font-weight: lighter;
+            font-family: Calibri, sans-serif;
+        }
+        #stat_yp {
+            color: #8D8BFF;
+            margin-right: 10px;
+        }
+        #stat_hz {
+            color: #FF6266;
+        }
+        #user_statistics i {
+            margin-right: 5px;
         }
 
         #info_edit_box {
@@ -155,7 +173,7 @@
             margin-bottom: 8px;
             font-size: 15px;
             font-weight: 500;
-            color: #2E2D3C;
+            color: #FFB800;
         }
         .rate_box i {
             color: #FFB800;
@@ -172,11 +190,33 @@
         .comment_list_item_empty:before {
             visibility: hidden;
         }
+        .comment_item_hz {
+            color: #FF6266 !important;
+            margin-left: 10px !important;
+            margin-right: 10px !important;
+            font-size: 14px !important;
+            font-family: Calibri, sans-serif;
+        }
         .like_list_item:before {
             visibility: visible;
         }
         .like_list_item_empty:before {
             visibility: hidden;
+        }
+        .delete_comment {
+            display: none;
+            vertical-align: top;
+            text-decoration: none;
+            color: #FFF !important;
+            font-size: 11px;
+            font-weight: lighter;
+            background: #FF6266;
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin-left: 10px;
+        }
+        .comment_list_item:hover .delete_comment {
+            display: inline;
         }
     </style>
 </head>
@@ -206,6 +246,10 @@
                 <i class="layui-icon layui-icon-edit"></i>
             </div>
         </div>
+        <p id="user_statistics">
+            <span id="stat_yp"><i class="layui-icon layui-icon-read"></i>影评 0</span>
+            <span id="stat_hz"><i class="layui-icon layui-icon-heart"></i>获赞 0</span>
+        </p>
         <div id="info_edit_box">
             <div class="info_single">
                 <div class="info_label"><i class="layui-icon layui-icon-username"></i>账号</div>
@@ -326,52 +370,73 @@
     addCommentEmptyRecord();
     addLikeEmptyRecord();
 
+    //请求评论记录
     function getCommentRecord() {
-        //请求评论记录
         $.ajax({
             type: "GET",
             url: "<%=request.getContextPath()%>/getCommentRecordById?id=" + "<%=user_id%>",
             dataType: "json",
             success: function (result) {
+                let likeCount = 0;
+                $('#list_comment_record')[0].innerHTML = "";
                 if (result && result['count'] > 0) {
-                    $('#list_comment_record')[0].innerHTML = "";
-                    list = result['list'];
-                    $.each(list, function (i, item) {
-                        addCommentRecord(item.time, item.movie_name, item.movie_id, item.content, Number(item.rate))
+                    $.each(result['list'], function (i, item) {
+                        likeCount += Number(item.count);
+                        addCommentRecord(item.time, item.movie_name, item.movie_id, item.content, Number(item.rate), item.id, Number(item.count));
                     })
+                } else {
+                    addCommentEmptyRecord();
                 }
+                $('#stat_yp')[0].innerHTML = "<i class='layui-icon layui-icon-read'></i>影评 " + result['count'];
+                $('#stat_hz')[0].innerHTML = "<i class='layui-icon layui-icon-heart'></i>获赞 " + likeCount;
             }
         });
     }
 
+    //请求点赞记录
     function getLikeRecord() {
-        //请求点赞记录
         $.ajax({
             type: "GET",
             url: "<%=request.getContextPath()%>/getLikeRecordById?id=" + "<%=user_id%>",
             dataType: "json",
             success: function (result) {
+                $('#list_like_record')[0].innerHTML = "";
                 if (result && result['count'] > 0) {
-                    $('#list_like_record')[0].innerHTML = "";
-                    list = result['list'];
-                    $.each(list, function (i, item) {
+                    $.each(result['list'], function (i, item) {
                         addLikeRecord(item.time, item.name, item.header, item.movie_name, item.movie_id, item.content, item.rate)
                     })
+                } else {
+                    addLikeEmptyRecord();
                 }
             }
         });
     }
 
-    function addCommentRecord(time, movieName, movieId, content, score) {
+    //删除评论
+    function deleteComment(commentId) {
+        $.post("<%=request.getContextPath()%>/deleteComment", {id: commentId}, function(result) {
+            var res = JSON.parse(result)
+            if (res.code == 0) {
+                layer.msg("评论已删除");
+                getCommentRecord();
+            } else {
+                layer.msg("出错了");
+            }
+        });
+    }
+
+    function addCommentRecord(time, movieName, movieId, content, score, id, likeCount) {
         $("<li class='layui-timeline-item comment_list_item'><i class='layui-icon layui-timeline-axis'>&#xe63f;</i><div class='layui-timeline-content layui-text'>"
             + "<h3 class='layui-timeline-title'><span class='span_special'>" + time + "</span>在"
-            + "<span class='span_special'><a target='_blank' href='movie_detail.jsp?id=" + movieId + "'>" + movieName + "</a></span>下发布了影评</h3>"
+            + "<span class='span_special'><a target='_blank' href='movie_detail.jsp?id=" + movieId + "'>" + movieName + "</a></span>下发布了影评"
+            + "<a class='delete_comment' href='javascript:deleteComment(\"" + id + "\");'><span>删除</span></a></h3>"
             + "<div class='record_rate rate_box'>我的评分："
             + "<i class='layui-icon layui-icon-rate" + (score >= 1 ? "-solid'" : "") + "'></i>"
             + "<i class='layui-icon layui-icon-rate" + (score >= 2 ? "-solid'" : "") + "'></i>"
             + "<i class='layui-icon layui-icon-rate" + (score >= 3 ? "-solid'" : "") + "'></i>"
             + "<i class='layui-icon layui-icon-rate" + (score >= 4 ? "-solid'" : "") + "'></i>"
-            + "<i class='layui-icon layui-icon-rate" + (score >= 5 ? "-solid'" : "") + "'></i></div>"
+            + "<i class='layui-icon layui-icon-rate" + (score >= 5 ? "-solid'" : "") + "'></i>"
+            + "<i class='layui-icon layui-icon-heart-fill comment_item_hz'>  " + likeCount + "</i></div>"
             + "<p class='record_content'>" + content + "</p></div></li>"
         ).prependTo($('#list_comment_record'));
     }
@@ -395,6 +460,7 @@
     }
 
     function addCommentEmptyRecord() {
+
         $("<li class='layui-timeline-item comment_list_item_empty'><i class='layui-icon layui-timeline-axis'>&#xe63f;</i>"
             + "<div class='layui-timeline-content layui-text'>"
             + "<div class='layui-timeline-title'>暂时没有发布评论...</div></div></li>"

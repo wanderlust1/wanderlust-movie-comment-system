@@ -56,4 +56,12 @@ class CommentServiceImpl: CommentService {
         return mCommentDao.queryLikeRecordById(id).sorted()
     }
 
+    override fun deleteComment(id: String): Int {
+        return if (mCommentDao.deleteComment(id) == 1) {
+            CommentEvent.SUCC
+        } else {
+            CommentEvent.FAIL
+        }
+    }
+
 }

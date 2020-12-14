@@ -16,14 +16,14 @@ open class BaseDao {
     protected var session: SqlSession? = null
 
     /**
-     * 打开对话。注意：每次请求数据库操作前必须调用。
+     * 打开对话。每次请求数据库操作前必须调用。
      */
     fun openSession() {
         session = factory.openSession()
     }
 
     /**
-     * 提交操作，并关闭对话。注意：每次请求数据库操作后必须调用。
+     * 提交操作。每次请求数据库操作后必须调用。
      */
     fun commit() {
         session?.commit()

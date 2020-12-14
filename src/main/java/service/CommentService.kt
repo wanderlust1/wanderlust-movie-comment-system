@@ -19,4 +19,6 @@ interface CommentService {
 
     fun getLikeRecordById(id: String): List<Like>
 
+    fun deleteComment(id: String): Int
+
 }

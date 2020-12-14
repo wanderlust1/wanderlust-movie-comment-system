@@ -29,6 +29,10 @@ class CommentDaoImpl: CommentDao, BaseDao() {
         return delete("dao.CommentDaoImpl.deleteLike", params)
     }
 
+    override fun deleteComment(id: String): Int {
+        return delete("dao.CommentDaoImpl.deleteComment", id)
+    }
+
     override fun queryCommentRecordById(id: String): List<Comment> {
         return query("dao.CommentDaoImpl.queryCommentRecordById", id)
     }
