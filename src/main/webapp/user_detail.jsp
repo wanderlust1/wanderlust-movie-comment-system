@@ -3,7 +3,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>用户信息管理</title>
     <link rel="stylesheet" href="layui/css/layui.css" media="all">
     <script src="./layui/layui.js"></script>
     <script src="js/jquery-2.1.3.min.js"></script>
@@ -20,6 +19,7 @@
         String nick_name = (String) session.getAttribute("nick_name");
         String header = (String) session.getAttribute("header");
     %>
+    <title><%=nick_name%> - 个人信息</title>
 
     <style>
         body {
@@ -27,13 +27,13 @@
         }
         .outer_body {
             margin: 0 auto;
-            width: 880px;
+            width: 840px;
             position: relative;
         }
         #user_info_edit_main {
             width: 260px;
             position: absolute;
-            left: -255px;
+            left: -280px;
         }
         .header_box {
             height: 190px;
@@ -130,13 +130,9 @@
             height: 26px !important;
             line-height: 26px !important;
         }
-        .like_record_box {
-            margin-left: 20px;
-            margin-top: 30px;
-        }
-        .box_divide legend {
-            font-size: 22px !important;
-            color: #000 !important;
+
+        .layui-tab {
+            margin-top: 20px;
         }
         .layui-timeline-axis {
             color: #1E9FFF !important;
@@ -163,11 +159,8 @@
             border-radius: 25px;
         }
         .like_record_content {
-            width: 765px;
+            width: 750px;
             float: right;
-        }
-        .comment_record_box {
-            margin-left: 20px;
         }
         .record_rate {
             margin-bottom: 8px;
@@ -218,6 +211,18 @@
         .comment_list_item:hover .delete_comment {
             display: inline;
         }
+        .layui-tab-brief>.layui-tab-title .layui-this:after {
+             border: none;
+             border-radius: 0;
+             border-bottom: 2px solid #1E9FFF;
+         }
+         .layui-tab-brief>.layui-tab-title .layui-this {
+             color: #1e9fff;
+         }
+         .layui-tab-title li {
+             font-size: 17px;
+             font-weight: lighter;
+         }
     </style>
 </head>
 <body>
@@ -273,12 +278,17 @@
             </div>
         </div>
     </div>
+    <div class="layui-tab layui-tab-brief" lay-filter="content_tab">
+      <ul class="layui-tab-title">
+        <li class="layui-this">我发布的影评</li>
+        <li>我的点赞记录</li>
+      </ul>
+      <div class="layui-tab-content"></div>
+    </div>
     <div class="like_record_box">
-        <fieldset class="layui-elem-field layui-field-title box_divide"><legend>我的点赞记录</legend></fieldset>
         <ul class="layui-timeline" id="list_like_record"></ul>
     </div>
     <div class="comment_record_box">
-        <fieldset class="layui-elem-field layui-field-title box_divide"><legend>我发布的评论</legend></fieldset>
         <ul class="layui-timeline" id="list_comment_record"></ul>
     </div>
 </div>
@@ -333,6 +343,7 @@
                     });
                     $("#nick_name").val('');
                     $("#nick_name").attr("placeholder", newNickname);
+                    document.title = newNickname + ' - 个人信息';
                     $("#nav_id")[0].innerHTML = newNickname;
                     $("#save_nickname").css("display", "none");
                 } else {
@@ -363,8 +374,20 @@
                 }
             });
         });
-        getLikeRecord();
-        setTimeout("getCommentRecord()","200");
+
+        element.on('tab(content_tab)', function(data){
+            if (data.index === 0) {
+                $('.comment_record_box').css("display", "block");
+                $('.like_record_box').css("display", "none");
+            } else {
+                $('.comment_record_box').css("display", "none");
+                $('.like_record_box').css("display", "block");
+            }
+        });
+        getCommentRecord();
+        setTimeout("getLikeRecord()","200");
+        $('.comment_record_box').css("display", "block");
+        $('.like_record_box').css("display", "none");
     });
 
     addCommentEmptyRecord();
@@ -463,7 +486,7 @@
 
         $("<li class='layui-timeline-item comment_list_item_empty'><i class='layui-icon layui-timeline-axis'>&#xe63f;</i>"
             + "<div class='layui-timeline-content layui-text'>"
-            + "<div class='layui-timeline-title'>暂时没有发布评论...</div></div></li>"
+            + "<div class='layui-timeline-title'>暂时没有发布影评...</div></div></li>"
         ).prependTo($('#list_comment_record'))
     }
 
