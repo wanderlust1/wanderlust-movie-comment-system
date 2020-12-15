@@ -35,7 +35,11 @@ class MovieController {
     @RequestMapping("/getMoviesBySearch")
     fun getMoviesBySearch(req: HttpServletRequest, rsp: HttpServletResponse) {
         rsp.contentType = "text/html;charset=UTF-8"
-        val data = MovieEvent.MovieListRsp(mMovieService.getMoviesBySearch(req.getParameter("search")))
+        val data = MovieEvent.MovieListRsp(mMovieService.getMoviesBySearch(
+                req.getParameter("search"),
+                req.getParameter("curr_page"),
+                req.getParameter("page_size"),
+        ))
         rsp.writer.write(Gson().toJson(data))
     }
 

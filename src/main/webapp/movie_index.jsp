@@ -122,10 +122,79 @@
             color: #B2B2B2;
             line-height: 25px;
         }
+
+        #page .layui-laypage a {
+            color: #94999F;
+            font-size: 12px;
+        }
+        #page .layui-laypage em {
+            font-size: 12px;
+        }
+        .layui-laypage .layui-laypage-spr {
+            margin-right: 5px;
+        }
+        #page .layui-laypage a {
+            margin-right: 5px;
+        }
+        #page .layui-laypage-curr {
+            margin-right: 5px;
+        }
+        .layui-laypage-prev, .layui-laypage-next {
+            font-family: "fontello", sans-serif;
+        }
+        #page .layui-laypage .layui-laypage-curr .layui-laypage-em {
+            background-color: #1e9fff;
+        }
+        #page .layui-laypage a, #page .layui-laypage span:not(.layui-laypage-skip) {
+            box-sizing: border-box;
+            padding: 4px 9px;
+            height: 26px;
+            width: 26px;
+            line-height: 1.42857143;
+        }
+        #page .layui-laypage .layui-laypage-count {
+            width: auto !important;
+            float: none;
+            color: #94999F;
+            font-size: 12px;
+        }
+        #page .layui-laypage-btn {
+            background-color: #1e9fff;
+            color: #FFFFFF;
+            width: 50px;
+            height: 26px;
+            padding: 1px 5px;
+            line-height: 1.5;
+        }
+        #page .layui-laypage a, #page .layui-laypage-spr {
+            border: 0px;
+        }
+        #page a.layui-laypage-prev, #page a.layui-laypage-next {
+            width: 56px;
+            border: 1px solid #ddd;
+        }
+        #page > .layui-laypage > a:hover {
+            color: #fff;
+            background-color: #1e9fff;
+            border-color: #1e9fff;
+        }
+        #page a.layui-laypage-prev:hover, #page a.layui-laypage-next:hover {
+            color: #94999F;
+            background-color: #fff;
+            border-color: #ddd;
+        }
+        #page .layui-laypage-curr em:not(.layui-laypage-em) {
+            line-height: 1.328571;
+        }
+        #page .layui-laypage-btn:hover {
+            color: #656A71;
+            border-color: #DEE1E3;
+            background-color: #fff;
+        }
     </style>
 </head>
 <body>
-    <div id="navigation" style="width: 100%; font-weight: lighter; font-family: Calibri, sans-serif"">
+    <div id="navigation" style="width: 100%; font-weight: lighter; font-family: Calibri, sans-serif">
         <ul class="layui-nav layui-bg-black">
             <li class="layui-nav-item" id="nav_logo"><a href="javascript:">电影评论系统 by Wanderlust</a></li>
             <li class="layui-nav-item"><a href="movie_index.jsp">找电影</a></li>
@@ -197,58 +266,91 @@
         </form>
     </div>
     <div id="div_list_container"></div>
+    <div id="page" style="text-align: center;"></div>
     <div id="footer"></div>
     </div>
 
 <script>
-    layui.use(['element', 'layer', 'form'], function () {
+    const PAGE_SIZE = 20;
+
+    layui.use(['element', 'layer', 'form', 'laypage'], function () {
         var element = layui.element;
         var form = layui.form;
         //按钮事件
-        layui.$('.layui-btn').on('click', function () {
-            searchMovie(layui.$('#input').val());
+        layui.$('#search').on('click', function () {
+            searchMovie(layui.$('#input').val(), 1);
         });
         //单选监听
         form.on('radio()', function(data) {
-            filterMovie(false);
+            filterMovie(false, 1);
+            $('#input').val("");
         });
-        filterMovie(true);
+        filterMovie(true, 1);
     });
 
-    function searchMovie(key) {
+    // 初始化分页器
+    function renderPage(total, curr, isSearch, searchWords) {
+        layui.use('laypage', function() {
+            var laypage = layui.laypage;
+            laypage.render({
+                elem: 'page',
+                count: total,
+                limit: PAGE_SIZE,
+                curr: curr,
+                layout: ['prev', 'page', 'next', 'skip'],
+                jump: function (obj, first) {
+                    if (!first) {
+                        if (isSearch) {
+                            searchMovie(searchWords, obj.curr);
+                        } else {
+                            filterMovie(false, obj.curr);
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    function searchMovie(key, currPage) {
         //搜索前，重置所有筛选器
         $("#div_list_container")[0].innerHTML = "";
         layui.form.val("table_selection", {
             "sort": "default", "style": "all", "area": "all", "year": "all"
         });
         if (key === '') {
-            filterMovie(true);
+            filterMovie(true, 1);
             return;
         }
         //请求搜索
+        url = "<%=request.getContextPath()%>/getMoviesBySearch?search=" + key;
+        url += "&page_size=" + PAGE_SIZE;
+        url += "&curr_page=" + currPage;
         $.ajax({
             type: "GET",
-            url: "<%=request.getContextPath()%>/getMoviesBySearch?search=" + key,
+            url: url,
             dataType: "json",
             success: function (result) {
                 if (result) {
                     list = result['data'];
-                    setFooter("<span style='color:#1E9FFF;font-size: 16px;'>“" + key + "”</span> 的搜索结果，共" + result['count'] + "部电影");
+                    setFooter("<span style='color:#1E9FFF;font-size: 16px;'>“" + key + "”</span> 的搜索结果，共" + result['total'] + "部电影");
                     $.each(list, function (i, item) {
                         addMovieItem(item.id, item.title, item.rate);
                     })
+                    renderPage(result['total'], currPage, true, key);
                 }
             }
         });
     }
 
-    function filterMovie(isAll) {
+    function filterMovie(isAll, currPage) {
         $("#div_list_container")[0].innerHTML = "";
         let filter = layui.form.val("table_selection");
         let url = "<%=request.getContextPath()%>/getAllMovies?"
         for (let key in filter) {
             url += key + "=" + filter[key] + "&";
         }
+        url += "page_size=" + PAGE_SIZE;
+        url += "&curr_page=" + currPage;
         //请求过滤
         $.ajax({
             type: "GET",
@@ -257,10 +359,11 @@
             success: function (result) {
                 if (result) {
                     list = result['data'];
-                    setFooter((isAll ? "" : "已过滤，") + "共" + result['count'] + "部电影");
+                    setFooter("共" + result['total'] + "部电影");
                     $.each(list, function (i, item) {
                         addMovieItem(item.id, item.title, item.rate);
                     })
+                    renderPage(result['total'], currPage, false, "");
                 }
             }
         });

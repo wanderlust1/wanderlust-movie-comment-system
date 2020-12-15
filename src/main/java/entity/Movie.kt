@@ -10,6 +10,8 @@ data class Movie(
 
     var title: String = "",
 
-    var rate: String = ""
+    var rate: String = "",
+
+    var total: Int = 0, //当前筛选条件中的电影总数量
 
 )

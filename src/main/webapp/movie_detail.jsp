@@ -246,7 +246,6 @@
 
         .like_box {
             float: right;
-            cursor: pointer;
         }
 
         .like_box p {
@@ -267,7 +266,7 @@
 </head>
 <body>
 <div class="main_body_box">
-<div id="navigation" style="width: 100%; font-weight: lighter; font-family: Calibri, sans-serif"">
+<div id="navigation" style="width: 100%; font-weight: lighter; font-family: Calibri, sans-serif">
     <ul class="layui-nav layui-bg-black">
         <li class="layui-nav-item" id="nav_logo"><a href="javascript:">电影评论系统 by Wanderlust</a></li>
         <li class="layui-nav-item"><a href="movie_index.jsp">找电影</a></li>

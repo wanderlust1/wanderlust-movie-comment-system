@@ -31,16 +31,19 @@ class MovieServiceImpl: MovieService {
                 put(it.key as String, (it.value as Array<*>)[0].toString())
             }
         }
+        //过滤条件
         val filter = MovieFilter()
         filter.sort = params["sort"] ?: ""
         filter.style = MovieFilter.filter(params["style"] ?: "")
         filter.area = MovieFilter.filter(params["area"] ?: "").split(" ")
         filter.year = MovieFilter.filter(params["year"] ?: "")
+        filter.currPage = params["curr_page"]?.toInt() ?: 0
+        filter.pageSize = params["page_size"]?.toInt() ?: 0
         return mMovieDao.queryAllMovies(filter)
     }
 
-    override fun getMoviesBySearch(search: String): List<Movie> {
-        return mMovieDao.queryMoviesBySearch(search)
+    override fun getMoviesBySearch(search: String, currPage: String, pageSize: String): List<Movie> {
+        return mMovieDao.queryMoviesBySearch(search, currPage, pageSize)
     }
 
 }

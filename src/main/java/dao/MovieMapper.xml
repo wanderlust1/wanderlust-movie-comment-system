@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 	<!-- 查询所有电影详细数据，传入过滤器 -->
 	<select id="queryAllMovies" resultType="entity.Movie" parameterType="entity.MovieFilter">
-		select movie_id as id, title, movie.rate
+		select movie_id as id, title, movie.rate, count(1) over() as total
 		from movie, movie_detail
 		<where>
 			movie.movie_id = movie_detail.movieId and movieType like '%' + #{style} + '%' and movieDate like '%' + #{year} + '%' and
@@ -28,23 +28,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				movieArea like '%' + #{item} + '%'
 			</foreach>
 		</where>
+		order by
 		<choose>
 			<when test="sort == 'rate'">
-				order by rate DESC
+				rate DESC
 			</when>
 			<when test="sort == 'name'">
-				order by title
+				title
 			</when>
 			<otherwise>
+				movie_id
 			</otherwise>
 		</choose>
+		 offset (#{currPage} - 1) * #{pageSize} row fetch next #{pageSize} row only
 	</select>
 
 	<!-- 根据关键词查询所有相关电影的详细数据 -->
-	<select id="queryMoviesBySearch" resultType="entity.Movie" parameterType="String">
-		select movie_id as id, title, rate
+	<select id="queryMoviesBySearch" resultType="entity.Movie" parameterType="Map">
+		select movie_id as id, title, rate, count(1) over() as total
 		from movie
-		where title like '%' + #{0} + '%'
+		where title like '%' + #{key} + '%'
+		order by movie_id offset (#{currPage} - 1) * #{pageSize} row fetch next #{pageSize} row only
 	</select>
 
 	<insert id="insertMovie" parameterType="entity.MovieDetail">

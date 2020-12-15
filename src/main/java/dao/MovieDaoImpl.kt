@@ -24,8 +24,9 @@ class MovieDaoImpl: MovieDao, BaseDao() {
         return query("dao.MovieDaoImpl.queryAllMovies", params)
     }
 
-    override fun queryMoviesBySearch(search: String): List<Movie> {
-        return query("dao.MovieDaoImpl.queryMoviesBySearch", search)
+    override fun queryMoviesBySearch(search: String, currPage: String, pageSize: String): List<Movie> {
+        val params = mapOf(Pair("key", search), Pair("currPage", currPage.toInt()), Pair("pageSize", pageSize.toInt()))
+        return query("dao.MovieDaoImpl.queryMoviesBySearch", params)
     }
 
     override fun insertMovie(movie: MovieDetail): Int {

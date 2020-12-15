@@ -15,7 +15,7 @@ interface MovieDao {
 
     fun queryAllMovies(params: MovieFilter): List<Movie>
 
-    fun queryMoviesBySearch(search: String): List<Movie>
+    fun queryMoviesBySearch(search: String, currPage: String, pageSize: String): List<Movie>
 
     fun insertMovie(movie: MovieDetail): Int
 

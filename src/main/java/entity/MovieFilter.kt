@@ -12,7 +12,11 @@ data class MovieFilter (
 
     var area: List<String> = mutableListOf(),
 
-    var year: String = ""
+    var year: String = "",
+
+    var pageSize: Int = 0,
+
+    var currPage: Int = 0
 
 ) {
     companion object {
