@@ -45,7 +45,27 @@
             float: left;
             width: 206px;
             height: 300px;
+            position: relative;
         }
+
+        #favour {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: rgba(0, 0, 0, 0.40);
+            border-radius: 8px 0 8px 0;
+            line-height: 40px;
+            text-align: center;
+            color: #FFB800;
+            cursor: pointer;
+        }
+
+        #favour .layui-icon {
+            font-size: 20px;
+        }
+
 
         #msg_header_img {
             width: 196px;
@@ -286,7 +306,10 @@
 <div id="comment_main_box" style="margin: 20px auto 30px; width:930px;">
     <div><h2 id="main_title" style="font-weight: bold;display: inline-block"></h2><span id="msg_state"></span></div>
     <div id="comment_msg_box">
-        <div id="comment_header"><img id="msg_header_img"></div>
+        <div id="comment_header">
+            <div id="favour"><i class="layui-icon layui-icon-star"></i></div>
+            <img id="msg_header_img">
+        </div>
         <div id="comment_book_msg">
             <table>
                 <tr>
@@ -417,6 +440,19 @@
             elem: '#comment_score',
             value: 5,
             text: true
+        });
+        //收藏
+        layui.$('#favour').on('click', function() {
+            $.post("<%=request.getContextPath()%>/setFavour", {'movie_id': movie_id}, function(result) {
+                var res = JSON.parse(result);
+                if (res.code == 0) {
+                    console.log(result)
+                    layer.msg("已添加到收藏夹")
+
+                } else {
+
+                }
+            });
         });
 
         //电影评分表单

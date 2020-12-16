@@ -282,6 +282,7 @@
       <ul class="layui-tab-title">
         <li class="layui-this">我发布的影评</li>
         <li>我的点赞记录</li>
+        <li>收藏夹</li>
       </ul>
       <div class="layui-tab-content"></div>
     </div>
@@ -376,13 +377,8 @@
         });
 
         element.on('tab(content_tab)', function(data){
-            if (data.index === 0) {
-                $('.comment_record_box').css("display", "block");
-                $('.like_record_box').css("display", "none");
-            } else {
-                $('.comment_record_box').css("display", "none");
-                $('.like_record_box').css("display", "block");
-            }
+            $('.comment_record_box').css("display", data.index === 0 ? "block" : "none");
+            $('.like_record_box').css("display", data.index === 1 ?  "block" : "none");
         });
         getCommentRecord();
         setTimeout("getLikeRecord()","200");
@@ -483,7 +479,6 @@
     }
 
     function addCommentEmptyRecord() {
-
         $("<li class='layui-timeline-item comment_list_item_empty'><i class='layui-icon layui-timeline-axis'>&#xe63f;</i>"
             + "<div class='layui-timeline-content layui-text'>"
             + "<div class='layui-timeline-title'>暂时没有发布影评...</div></div></li>"

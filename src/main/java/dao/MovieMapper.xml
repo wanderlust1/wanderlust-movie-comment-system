@@ -62,5 +62,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		)
 	</insert>
 
+	<insert id="setFavour" parameterType="Map">
+		insert into favour(user_id, movie_id)
+		values (#{user_id}, #{movie_id})
+	</insert>
+
+	<select id="getFavourList" resultType="entity.Movie" parameterType="String">
+		select movie_id as id, title, rate
+		from favour, movie
+		where movie.movie_id = favour.movie_id and favour.user_id = #{0}
+	</select>
+
+	<select id="getFavourStatus" resultType="Map" parameterType="Map">
+		select * from favour where user_id = #{user_id} and movie_id = #{movie_id}
+	</select>
+
 </mapper>
 

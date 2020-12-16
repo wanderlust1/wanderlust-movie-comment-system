@@ -4,6 +4,7 @@ import dao.MovieDao
 import entity.Movie
 import entity.MovieDetail
 import entity.MovieFilter
+import event.MovieEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -44,6 +45,26 @@ class MovieServiceImpl: MovieService {
 
     override fun getMoviesBySearch(search: String, currPage: String, pageSize: String): List<Movie> {
         return mMovieDao.queryMoviesBySearch(search, currPage, pageSize)
+    }
+
+    override fun setFavour(user_id: String, movie_id: String): Int {
+        return if (mMovieDao.setFavour(user_id, movie_id) == 1) {
+            MovieEvent.SUCC
+        } else {
+            MovieEvent.FAIL
+        }
+    }
+
+    override fun getFavourList(user_id: String): List<Movie> {
+        return mMovieDao.getFavourList(user_id)
+    }
+
+    override fun getFavourStatus(user_id: String, movie_id: String): Int {
+        return if (mMovieDao.getFavourStatus(user_id, movie_id)) {
+            MovieEvent.SUCC
+        } else {
+            MovieEvent.FAIL
+        }
     }
 
 }
