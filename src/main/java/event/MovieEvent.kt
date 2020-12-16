@@ -9,6 +9,8 @@ interface MovieEvent {
     companion object {
         const val SUCC = 0
         const val FAIL = 1
+        const val ADD_FAVOUR = 1 //收藏
+        const val DEL_FAVOUR = 2 //取消收藏
     }
 
     data class MovieDetailRsp(@SerializedName("data") val item: MovieDetail? = null)

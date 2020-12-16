@@ -35,6 +35,7 @@ class UserController {
         val request = Gson().fromJson(req.getParameter("req"), UserEvent.ModifyInfoReq::class.java)
         val result = mUserService.modifyNickname(request.id, request.newValue)
         val data = UserEvent.ModifyInfoRsp(result)
+        //更新session信息
         if (result == UserEvent.SUCC) {
             session.setAttribute("nick_name", request.newValue)
         }
@@ -46,7 +47,8 @@ class UserController {
         rsp.contentType = "text/html;charset=UTF-8"
         val id = req.getParameter("user_id")
         val basePath = session.servletContext.getRealPath("/") + "header\\"
-        val newHeaderName = buildString { //生成一串随机字符，替换之前的头像文件，防止页面缓存导致头像不更新
+        //生成一串随机字符，替换之前的头像文件，防止页面缓存导致头像不更新
+        val newHeaderName = buildString {
             append(id)
             for (i in 1..10) {
                 append(Random().nextInt(10))
@@ -56,6 +58,7 @@ class UserController {
         val oldHeader = if (oldHeaderName != null) "$basePath$oldHeaderName.jpg" else null
         val newHeader = "$basePath$newHeaderName.jpg"
         val result = mUserService.modifyHeader(id, newHeader, newHeaderName, oldHeader, file.bytes)
+        //更新session信息
         if (result == UserEvent.SUCC) {
             session.setAttribute("header", newHeaderName)
         }

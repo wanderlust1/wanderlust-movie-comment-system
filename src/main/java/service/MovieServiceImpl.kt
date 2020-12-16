@@ -4,9 +4,11 @@ import dao.MovieDao
 import entity.Movie
 import entity.MovieDetail
 import entity.MovieFilter
+import event.CommentEvent
 import event.MovieEvent
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.text.SimpleDateFormat
 
 /**
  * @author Wanderlust 2020.10.17
@@ -47,23 +49,33 @@ class MovieServiceImpl: MovieService {
         return mMovieDao.queryMoviesBySearch(search, currPage, pageSize)
     }
 
-    override fun setFavour(user_id: String, movie_id: String): Int {
-        return if (mMovieDao.setFavour(user_id, movie_id) == 1) {
-            MovieEvent.SUCC
+    override fun setFavour(userId: String, movieId: String, operation: Int): Int {
+        return if (operation == MovieEvent.ADD_FAVOUR) {
+            if (mMovieDao.insertFavour(userId, movieId) == 1) {
+                MovieEvent.SUCC
+            } else {
+                MovieEvent.FAIL
+            }
+        } else if (operation == MovieEvent.DEL_FAVOUR) {
+            if (mMovieDao.deleteFavour(userId, movieId) == 1) {
+                MovieEvent.SUCC
+            } else {
+                MovieEvent.FAIL
+            }
         } else {
-            MovieEvent.FAIL
+            CommentEvent.FAIL
         }
     }
 
-    override fun getFavourList(user_id: String): List<Movie> {
-        return mMovieDao.getFavourList(user_id)
+    override fun getFavourList(userId: String): List<Movie> {
+        return mMovieDao.queryFavourList(userId)
     }
 
-    override fun getFavourStatus(user_id: String, movie_id: String): Int {
-        return if (mMovieDao.getFavourStatus(user_id, movie_id)) {
-            MovieEvent.SUCC
+    override fun getFavourStatus(userId: String, movieId: String): Int {
+        return if (mMovieDao.queryFavourStatus(userId, movieId)) {
+            MovieEvent.ADD_FAVOUR //已收藏
         } else {
-            MovieEvent.FAIL
+            MovieEvent.DEL_FAVOUR //未收藏
         }
     }
 

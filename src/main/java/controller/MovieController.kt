@@ -49,7 +49,8 @@ class MovieController {
         rsp.contentType = "text/html;charset=UTF-8"
         val data = MovieEvent.SetFavourRsp(mMovieService.setFavour(
                 session.getAttribute("user_id") as String,
-                req.getParameter("movie_id")
+                req.getParameter("movie_id"),
+                req.getParameter("set_favour").toInt()
         ))
         rsp.writer.write(Gson().toJson(data))
     }

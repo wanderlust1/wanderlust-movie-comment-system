@@ -21,34 +21,35 @@ class MovieDaoImpl: MovieDao, BaseDao() {
     }
 
     override fun queryAllMovies(params: MovieFilter): List<Movie> {
-        val a = query<Movie>("dao.MovieDaoImpl.queryAllMovies", params)
-        println(a)
-        return a
+        return query<Movie>("dao.MovieDaoImpl.queryAllMovies", params)
     }
 
     override fun queryMoviesBySearch(search: String, currPage: String, pageSize: String): List<Movie> {
         val params = mapOf(Pair("key", search), Pair("currPage", currPage.toInt()), Pair("pageSize", pageSize.toInt()))
-        val a =  query<Movie>("dao.MovieDaoImpl.queryMoviesBySearch", params)
-        println(a)
-        return a
+        return query("dao.MovieDaoImpl.queryMoviesBySearch", params)
     }
 
     override fun insertMovie(movie: MovieDetail): Int {
         return insert("dao.MovieDaoImpl.insertMovie", movie)
     }
 
-    override fun setFavour(user_id: String, movie_id: String): Int {
+    override fun insertFavour(user_id: String, movie_id: String): Int {
         val params = mapOf(Pair("user_id", user_id), Pair("movie_id", movie_id))
-        return insert("dao.MovieDaoImpl.setFavour", params)
+        return insert("dao.MovieDaoImpl.insertFavour", params)
     }
 
-    override fun getFavourList(user_id: String): List<Movie> {
-        return query("dao.MovieDaoImpl.getFavourList",user_id)
+    override fun deleteFavour(user_id: String, movie_id: String): Int {
+        val params = mapOf(Pair("user_id", user_id), Pair("movie_id", movie_id))
+        return insert("dao.MovieDaoImpl.deleteFavour", params)
     }
 
-    override fun getFavourStatus(user_id: String, movie_id: String): Boolean {
-        val params = mapOf(Pair("user_id", user_id), Pair("movie_id", movie_id))
-        return query<Any>("dao.MovieDaoImpl.getFavourStatus", params).isNotEmpty()
+    override fun queryFavourList(user_id: String): List<Movie> {
+        return query("dao.MovieDaoImpl.queryFavourList",user_id)
+    }
+
+    override fun queryFavourStatus(userId: String, movieId: String): Boolean {
+        val params = mapOf(Pair("user_id", userId), Pair("movie_id", movieId))
+        return query<Any>("dao.MovieDaoImpl.queryFavourStatus", params).isNotEmpty()
     }
 
 }

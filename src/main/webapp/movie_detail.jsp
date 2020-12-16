@@ -307,7 +307,7 @@
     <div><h2 id="main_title" style="font-weight: bold;display: inline-block"></h2><span id="msg_state"></span></div>
     <div id="comment_msg_box">
         <div id="comment_header">
-            <div id="favour"><i class="layui-icon layui-icon-star"></i></div>
+            <div id="favour"></div>
             <img id="msg_header_img">
         </div>
         <div id="comment_book_msg">
@@ -427,7 +427,8 @@
 <script>
     let user_id = "<%= user_id %>";
     let nick_name = "<%= nick_name %>";
-    let movie_id = getSearch("id")
+    let movie_id = getSearch("id");
+    let is_favour = false;
     getCommentList();
 
     //layui配置
@@ -442,15 +443,16 @@
             text: true
         });
         //收藏
-        layui.$('#favour').on('click', function() {
-            $.post("<%=request.getContextPath()%>/setFavour", {'movie_id': movie_id}, function(result) {
+        layui.$('#favour').on('click', function() { //setFavour=1为收藏，2为取消收藏
+            $.post("<%=request.getContextPath()%>/setFavour", {'movie_id': movie_id, 'set_favour': is_favour ? "2" : "1"}, function(result) {
                 var res = JSON.parse(result);
                 if (res.code == 0) {
-                    console.log(result)
-                    layer.msg("已添加到收藏夹")
-
+                    layer.msg(is_favour ? "已从收藏夹移除" : "已添加到收藏夹");
+                    $('#favour')[0].innerHTML = "<i class='layui-icon layui-icon-star"
+                        + (is_favour ? "" : "-fill") + "'></i>";
+                    is_favour = !is_favour
                 } else {
-
+                    layer.msg("出错了");
                 }
             });
         });
@@ -531,6 +533,22 @@
             }
         }
     });
+
+    setTimeout("getFavourStatus()","200");
+
+    function getFavourStatus() {
+        $.ajax({
+            type: "GET",
+            url: "<%=request.getContextPath()%>/getFavourStatus?movie_id=" + movie_id,
+            dataType: "json",
+            success: function (result) {
+                if (result) {
+                    is_favour = result['code'] === 1;
+                    $('#favour')[0].innerHTML = "<i class='layui-icon layui-icon-star" + (result['code'] === 1 ? "-fill" : "") + "'></i>";
+                }
+            }
+        });
+    }
 
     function getCommentList() {
         //获取评论

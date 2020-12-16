@@ -212,17 +212,74 @@
             display: inline;
         }
         .layui-tab-brief>.layui-tab-title .layui-this:after {
-             border: none;
-             border-radius: 0;
-             border-bottom: 2px solid #1E9FFF;
-         }
-         .layui-tab-brief>.layui-tab-title .layui-this {
-             color: #1e9fff;
-         }
-         .layui-tab-title li {
-             font-size: 17px;
-             font-weight: lighter;
-         }
+            border: none;
+            border-radius: 0;
+            border-bottom: 2px solid #1E9FFF;
+        }
+        .layui-tab-brief>.layui-tab-title .layui-this {
+            color: #1e9fff;
+        }
+        .layui-tab-title li {
+            font-size: 17px;
+            font-weight: lighter;
+        }
+
+        #div_list_container {
+            width: 860px;
+            margin-left: -20px;
+            padding-right: 20px;
+        }
+        .div_list_item {
+            width: 152px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+        .div_list_img {
+            width: 152px;
+            height: 203px;
+            position: relative;
+        }
+        .cancel_favour {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: rgba(0, 0, 0, 0.40);
+            border-radius: 8px 0 8px 0;
+            line-height: 30px;
+            text-align: center;
+            color: #FFB800;
+            cursor: pointer;
+        }
+        .div_list_item a {
+            text-decoration: none;
+        }
+        .div_list_img img {
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+        }
+        .p_list_movie_name {
+            height: 34px;
+            margin: 6px 5px;
+            font-size: 13px;
+            text-align: center;
+            color: #15151c;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            overflow: hidden;
+        }
+        .p_list_movie_name span {
+            margin-left: 3px;
+            font-size: 13px;
+            color: #f5b000;
+        }
+        .div_list_item:hover p {
+            color: #1E9FFF;
+        }
     </style>
 </head>
 <body>
@@ -286,12 +343,13 @@
       </ul>
       <div class="layui-tab-content"></div>
     </div>
-    <div class="like_record_box">
+    <div class="like_record_box" style="display: none;">
         <ul class="layui-timeline" id="list_like_record"></ul>
     </div>
     <div class="comment_record_box">
         <ul class="layui-timeline" id="list_comment_record"></ul>
     </div>
+    <div id="div_list_container" style="display: none;"></div>
 </div>
 
 <script>
@@ -379,15 +437,18 @@
         element.on('tab(content_tab)', function(data){
             $('.comment_record_box').css("display", data.index === 0 ? "block" : "none");
             $('.like_record_box').css("display", data.index === 1 ?  "block" : "none");
+            $('#div_list_container').css("display", data.index === 2 ?  "block" : "none");
         });
         getCommentRecord();
         setTimeout("getLikeRecord()","200");
+        setTimeout( "getFavourList()","400");
         $('.comment_record_box').css("display", "block");
-        $('.like_record_box').css("display", "none");
+        $('#div_list_container').css("display", "none");
     });
 
     addCommentEmptyRecord();
     addLikeEmptyRecord();
+    addEmptyFavourite();
 
     //请求评论记录
     function getCommentRecord() {
@@ -431,6 +492,24 @@
         });
     }
 
+    function getFavourList() {
+        $.ajax({
+            type: "GET",
+            url: "<%=request.getContextPath()%>/getFavourList",
+            dataType: "json",
+            success: function (result) {
+                $('#div_list_container')[0].innerHTML = "";
+                if (result && result['count'] > 0) {
+                    $.each(result['list'], function (i, item) {
+                        addFavoriteItem(item.id, item.title, item.rate);
+                    })
+                } else {
+                    addEmptyFavourite();
+                }
+            }
+        });
+    }
+
     //删除评论
     function deleteComment(commentId) {
         $.post("<%=request.getContextPath()%>/deleteComment", {id: commentId}, function(result) {
@@ -442,6 +521,19 @@
                 layer.msg("出错了");
             }
         });
+    }
+
+    function cancelFavour(movieId, name) {
+        $.post("<%=request.getContextPath()%>/setFavour", {'movie_id': movieId, 'set_favour': "2"}, function(result) {
+            var res = JSON.parse(result);
+            if (res.code == 0) {
+                layer.msg("<span style='color: #1e9fff;'>" + name + "</span>已从收藏夹移除");
+                getFavourList();
+            } else {
+                layer.msg("出错了");
+            }
+        });
+        return false;
     }
 
     function addCommentRecord(time, movieName, movieId, content, score, id, likeCount) {
@@ -490,6 +582,23 @@
             + "<div class='layui-timeline-content layui-text'>"
             + "<div class='layui-timeline-title'>暂时没有点赞记录...</div></div></li>"
         ).prependTo($('#list_like_record'))
+    }
+
+    function addEmptyFavourite() {
+        $("<li class='layui-timeline-item like_list_item_empty' style='margin-left:25px;'><i class='layui-icon layui-timeline-axis'>&#xe63f;</i>"
+            + "<div class='layui-timeline-content layui-text'>"
+            + "<div class='layui-timeline-title'>暂时没有收藏电影...</div></div></li>"
+        ).prependTo($('#div_list_container'))
+    }
+
+    function addFavoriteItem(id, name, rate) {
+        $("<div class='div_list_item'><a target='_blank' href='movie_detail.jsp?id=" + id + "'>"
+              + "<div class='div_list_img'><a href='javascript:cancelFavour(\"" + id + "\",\"" + name + "\");'><div class='cancel_favour'>"
+              + "<i class='layui-icon layui-icon-star-fill'></i></div></a>"
+              + "<img src='movie_cover/" + id + ".jpg'></div>"
+              + "<p class='p_list_movie_name'>" + name
+              + "<span>" + rate + "</span></p></a></div>"
+        ).prependTo($('#div_list_container'))
     }
 </script>
 </body>

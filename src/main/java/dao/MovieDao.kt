@@ -19,9 +19,12 @@ interface MovieDao {
 
     fun insertMovie(movie: MovieDetail): Int
 
-    fun setFavour(user_id: String, movie_id: String): Int
+    fun insertFavour(user_id: String, movie_id: String): Int
 
-    fun getFavourList(user_id:String): List<Movie>
+    fun deleteFavour(user_id: String, movie_id: String): Int
 
-    fun getFavourStatus(user_id: String, movie_id: String): Boolean
+    fun queryFavourList(user_id:String): List<Movie>
+
+    fun queryFavourStatus(userId: String, movieId: String): Boolean
+
 }
