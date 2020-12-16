@@ -234,6 +234,7 @@
             display: inline-block;
             margin-left: 20px;
             margin-bottom: 20px;
+            cursor: pointer;
         }
         .div_list_img {
             width: 152px;
@@ -252,6 +253,7 @@
             text-align: center;
             color: #FFB800;
             cursor: pointer;
+            z-index: 99;
         }
         .div_list_item a {
             text-decoration: none;
@@ -523,7 +525,11 @@
         });
     }
 
-    function cancelFavour(movieId, name) {
+    function clickItem(id) {
+        window.open('movie_detail.jsp?id=' + id);
+    }
+
+    function cancelFavour(movieId, name, event) {
         $.post("<%=request.getContextPath()%>/setFavour", {'movie_id': movieId, 'set_favour': "2"}, function(result) {
             var res = JSON.parse(result);
             if (res.code == 0) {
@@ -533,7 +539,8 @@
                 layer.msg("出错了");
             }
         });
-        return false;
+        console.log(event);
+        event.stopPropagation();
     }
 
     function addCommentRecord(time, movieName, movieId, content, score, id, likeCount) {
@@ -592,12 +599,12 @@
     }
 
     function addFavoriteItem(id, name, rate) {
-        $("<div class='div_list_item'><a target='_blank' href='movie_detail.jsp?id=" + id + "'>"
-              + "<div class='div_list_img'><a href='javascript:cancelFavour(\"" + id + "\",\"" + name + "\");'><div class='cancel_favour'>"
-              + "<i class='layui-icon layui-icon-star-fill'></i></div></a>"
+        $("<div class='div_list_item' onclick='clickItem(\"" + id + "\")'>"
+              + "<div class='div_list_img'><div class='cancel_favour' onclick='cancelFavour(\"" + id + "\",\"" + name + "\", event)'>"
+              + "<i class='layui-icon layui-icon-star-fill'></i></div>"
               + "<img src='movie_cover/" + id + ".jpg'></div>"
               + "<p class='p_list_movie_name'>" + name
-              + "<span>" + rate + "</span></p></a></div>"
+              + "<span>" + rate + "</span></p></div>"
         ).prependTo($('#div_list_container'))
     }
 </script>
