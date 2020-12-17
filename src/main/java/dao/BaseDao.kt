@@ -12,21 +12,21 @@ import java.lang.Exception
  */
 open class BaseDao {
 
-    private val factory = SqlSessionFactoryBuilder().build(Resources.getResourceAsReader("mybatis.xml"))
-    protected var session: SqlSession? = null
+    private val mFactory = SqlSessionFactoryBuilder().build(Resources.getResourceAsReader("mybatis.xml"))
+    protected var mSession: SqlSession? = null
 
     /**
      * 打开对话。每次请求数据库操作前必须调用。
      */
     fun openSession() {
-        session = factory.openSession()
+        mSession = mFactory.openSession()
     }
 
     /**
      * 提交操作。每次请求数据库操作后必须调用。
      */
     fun commit() {
-        session?.commit()
+        mSession?.commit()
     }
 
     /**
@@ -39,14 +39,14 @@ open class BaseDao {
         val result = mutableListOf<T>()
         try {
             openSession()
-            session?.selectList(mapperPath, params)?.forEach {
+            mSession?.selectList(mapperPath, params)?.forEach {
                 if (it is T) result.add(it)
             }
             commit()
         } catch (e: Exception) {
         } finally {
             try {
-                session?.close()
+                mSession?.close()
             } catch (e: Exception) {
             }
         }
@@ -62,14 +62,14 @@ open class BaseDao {
     protected fun insert(mapperPath: String, params: Any): Int {
         return try {
             openSession()
-            val result = session?.insert(mapperPath, params)
+            val result = mSession?.insert(mapperPath, params)
             commit()
             result ?: -1
         } catch (e: Exception) {
             if (e is IbatisException) -2 else -1
         } finally {
             try {
-                session?.close()
+                mSession?.close()
             } catch (e: Exception) {
             }
         }
@@ -84,14 +84,14 @@ open class BaseDao {
     protected fun update(mapperPath: String, params: Any): Int {
         return try {
             openSession()
-            val result = session?.update(mapperPath, params)
+            val result = mSession?.update(mapperPath, params)
             commit()
             result ?: -1
         } catch (e: Exception) {
             -1
         } finally {
             try {
-                session?.close()
+                mSession?.close()
             } catch (e: Exception) {
             }
         }
@@ -106,14 +106,14 @@ open class BaseDao {
     protected fun delete(mapperPath: String, params: Any): Int {
         return try {
             openSession()
-            val result = session?.delete(mapperPath, params)
+            val result = mSession?.delete(mapperPath, params)
             commit()
             result ?: -1
         } catch (e: Exception) {
             -1
         } finally {
             try {
-                session?.close()
+                mSession?.close()
             } catch (e: Exception) {
             }
         }

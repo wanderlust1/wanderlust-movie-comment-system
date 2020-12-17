@@ -70,7 +70,7 @@
 
         #user_statistics {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 15px;
             font-weight: lighter;
             font-family: Calibri, sans-serif;
@@ -81,6 +81,10 @@
         }
         #stat_hz {
             color: #FF6266;
+            margin-right: 10px;
+        }
+        #stat_sc {
+            color: #FFB800;
         }
         #user_statistics i {
             margin-right: 5px;
@@ -313,6 +317,7 @@
         <p id="user_statistics">
             <span id="stat_yp"><i class="layui-icon layui-icon-read"></i>影评 0</span>
             <span id="stat_hz"><i class="layui-icon layui-icon-heart"></i>获赞 0</span>
+            <span id="stat_sc"><i class="layui-icon layui-icon-star"></i>收藏 0</span>
         </p>
         <div id="info_edit_box">
             <div class="info_single">
@@ -443,7 +448,7 @@
         });
         getCommentRecord();
         setTimeout("getLikeRecord()","200");
-        setTimeout( "getFavourList()","400");
+        setTimeout( "getFavourList()","300");
         $('.comment_record_box').css("display", "block");
         $('#div_list_container').css("display", "none");
     });
@@ -508,6 +513,7 @@
                 } else {
                     addEmptyFavourite();
                 }
+                $('#stat_sc')[0].innerHTML = "<i class='layui-icon layui-icon-heart'></i>收藏 " + result['count'];
             }
         });
     }
@@ -600,7 +606,7 @@
 
     function addFavoriteItem(id, name, rate) {
         $("<div class='div_list_item' onclick='clickItem(\"" + id + "\")'>"
-              + "<div class='div_list_img'><div class='cancel_favour' onclick='cancelFavour(\"" + id + "\",\"" + name + "\", event)'>"
+              + "<div class='div_list_img'><div class='cancel_favour' title='取消收藏' onclick='cancelFavour(\"" + id + "\",\"" + name + "\", event)'>"
               + "<i class='layui-icon layui-icon-star-fill'></i></div>"
               + "<img src='movie_cover/" + id + ".jpg'></div>"
               + "<p class='p_list_movie_name'>" + name
