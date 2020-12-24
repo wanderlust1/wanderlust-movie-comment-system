@@ -120,7 +120,7 @@
             </div>
         </form>
         <div class="tip">
-            <h4>Wanderlust</h4>
+            <h4 style="font-weight: lighter;">电影评论系统 by Wanderlust</h4>
         </div>
     </div>
 </div>

@@ -197,7 +197,7 @@
     <div id="navigation" style="width: 100%; font-weight: lighter; font-family: Calibri, sans-serif">
         <ul class="layui-nav layui-bg-black">
             <li class="layui-nav-item" id="nav_logo"><a href="javascript:">电影评论系统 by Wanderlust</a></li>
-            <li class="layui-nav-item"><a href="movie_index.jsp">找电影</a></li>
+            <li class="layui-nav-item layui-this"><a href="movie_index.jsp">找电影</a></li>
             <li class="layui-nav-item" style="float: right">
                 <a href="javascript:">
                     <img src="header/<%=header%>.jpg" class="layui-nav-img" id="nav_header" onerror="this.src = 'header/default_head.png'">

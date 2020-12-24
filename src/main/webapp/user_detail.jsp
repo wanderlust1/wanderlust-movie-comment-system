@@ -294,7 +294,7 @@
     <ul class="layui-nav layui-bg-black">
         <li class="layui-nav-item" id="nav_logo"><a href="javascript:">电影评论系统 by Wanderlust</a></li>
         <li class="layui-nav-item"><a href="movie_index.jsp">找电影</a></li>
-        <li class="layui-nav-item" style="float: right">
+        <li class="layui-nav-item layui-this" style="float: right">
             <a href="javascript:">
                 <img src="header/<%=header%>.jpg" class="layui-nav-img" id="nav_header" onerror="this.src = 'header/default_head.png'">
                 <span id="nav_id" style="margin-right: 5px;"><%=nick_name%></span>
@@ -523,7 +523,7 @@
         $.post("<%=request.getContextPath()%>/deleteComment", {id: commentId}, function(result) {
             var res = JSON.parse(result)
             if (res.code == 0) {
-                layer.msg("评论已删除");
+                layer.msg("影评已删除");
                 getCommentRecord();
             } else {
                 layer.msg("出错了");
